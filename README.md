@@ -44,7 +44,7 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 9 | Learning and adaptation | done | done | done | collect feedback → distill lessons → A/B |
 | 10 | Model Context Protocol | — | — | — | FastMCP lab done — see Special labs |
 | 11 | Goal setting and monitoring | done | done | done | set KPIs → score → adjust within budget |
-| 12 | Exception handling and recovery | pending | pending | pending | docs only |
+| 12 | Exception handling and recovery | done | pending | pending | wrap tool use: retry / fallback / stop |
 | 13 | Human-in-the-loop | pending | pending | pending | docs only |
 | 14 | Knowledge retrieval (RAG) | pending | pending | pending | docs only |
 | 15 | Inter-agent communication (A2A) | pending | pending | pending | docs only |
@@ -55,9 +55,9 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11) ported to LangChain and MAF, exception-handling scratch, MCP server + tool-use client.
 
-**Next:** Exception handling and recovery (#12) from scratch.
+**Next:** Exception handling and recovery (#12) LangChain and MAF ports.
 
 ## Special labs
 
@@ -91,7 +91,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch patterns (1–9, 11)
+### From-scratch patterns (1–9, 11–12)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -104,6 +104,7 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.multi_agent
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.memory_management
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.learning
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.goal_setting
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.exception_handling
 ```
 
 ### Ports in the other labs

@@ -232,3 +232,8 @@ If there is no prior draft, write the first reply.
 If there is a prior draft and failed goals, revise toward those failures only.
 Do not invent tracking or refunds. Output the email body only."""
 
+EXCEPTION_FALLBACK_SYSTEM = f"""You write a short support reply after a tool failure.
+{POLICY}
+Do not invent order status, tracking, or refunds. Say you could not complete the lookup
+and what the customer should do next. Output the email body only."""
+
