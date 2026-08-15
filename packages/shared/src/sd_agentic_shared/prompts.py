@@ -314,3 +314,16 @@ Output JSON only:
 
 ok MUST be false if the draft promises a refund over $50, invents tracking, or blames the customer."""
 
+EVAL_JUDGE_SYSTEM = f"""You are a quality judge for a customer support draft.
+{POLICY}
+
+Output JSON only (no markdown):
+{{
+  "pass": true,
+  "score": 4,
+  "reason": "short reason"
+}}
+
+score is an integer 1 to 5. pass MUST be false if the draft invents facts, promises a refund over $50, or blames the customer.
+Judge only the draft against the email; do not rewrite it."""
+

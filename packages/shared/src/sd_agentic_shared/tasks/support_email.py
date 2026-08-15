@@ -38,6 +38,20 @@ SAMPLE_EMAILS: dict[str, str] = {
     "billing": BILLING_EMAIL,
 }
 
+
+class EvalCase(BaseModel):
+    id: str
+    email: str
+    must_mention: list[str]
+
+
+EVAL_CASES: list[EvalCase] = [
+    EvalCase(id="mixed", email=SUPPORT_EMAIL, must_mention=["A-18422", "A-18423"]),
+    EvalCase(id="shipping", email=SHIPPING_EMAIL, must_mention=["A-18423"]),
+    EvalCase(id="cancel", email=CANCEL_EMAIL, must_mention=["A-18422"]),
+    EvalCase(id="billing", email=BILLING_EMAIL, must_mention=["A-18422"]),
+]
+
 MEMORY_FOLLOWUP_1 = """
 its me again about the headphones. you should already have my order numbers.
 still no tracking. i told you i paid 89. what is the status??
