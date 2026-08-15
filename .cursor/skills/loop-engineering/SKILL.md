@@ -53,7 +53,7 @@ Loop progress:
 - [ ] README Progress table complete
 ```
 
-1. Read `README.md` (Objective, Labs, Progress, Next, Learning order). If there is **no Progress table**, create one now using the template in [objectives.md](objectives.md) (infer `done` from modules that already exist). Then pick.
+1. Read `README.md` (Objective, Labs, Progress, Next, Learning order). If there is **no Progress table**, create one now using the template in [objectives.md](objectives.md) (infer shipped cells as source links from modules that already exist). Then pick.
 2. Follow [objectives.md](objectives.md) to pick **exactly one** next unit of work.
 3. Announce:
 
@@ -66,7 +66,7 @@ Loop progress:
 
 4. Run the **inner cycle** below.
 5. Re-read `README.md`. If pending work remains, start the next cycle immediately.
-6. When every Progress cell is `done` or `—`, stop with a completion summary. Do not invent extra work.
+6. When every Progress cell is a source link or `—`, stop with a completion summary. Do not invent extra work.
 
 ## Inner cycle
 
@@ -112,10 +112,10 @@ If apply pauses on a design issue, update artifacts, then continue. Do not start
 Do this **after apply, before review**. Follow [objectives.md](objectives.md) § README Progress.
 
 - If `README.md` has no `## Progress` table, **create it**.
-- Flip every cell this cycle actually shipped from `pending` to `done`.
+- Flip every cell this cycle actually shipped from `pending` to `[<module>.py](<path>)`.
 - Refresh **Done:**, **Next:**, and **Run** for what landed.
 - Leave MCP `#10` as `—`. Do not add MCP or OO-Agents columns. Flip Special labs cells only if this cycle shipped that module.
-- Do not mark labs done that were not implemented.
+- Do not link labs that were not implemented.
 
 A cycle that ships code but leaves Progress unchanged is incomplete.
 
@@ -156,7 +156,7 @@ If the hook fails, fix and make a **new** commit. Do not amend unless the hook o
 **Objective:** <pattern / lab>
 **Commit:** <short hash> <subject>
 **Review:** no CRITICAL / N WARNING
-**README:** <what Progress cells flipped to done>
+**README:** <what Progress cells flipped to source links>
 **Next pick:** <following objective or "all objectives done">
 ```
 

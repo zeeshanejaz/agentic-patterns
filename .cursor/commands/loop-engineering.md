@@ -21,7 +21,7 @@ Stop only when the Progress table is complete, the user interrupts, or a blocker
 2. **Explore** — `.cursor/skills/openspec-explore/SKILL.md` (read-only, bounded; then exit)
 3. **Propose** — `.cursor/skills/openspec-propose/SKILL.md`
 4. **Apply** — `.cursor/skills/openspec-apply-change/SKILL.md`
-5. **README Progress** — flip shipped cells (`pending` → `done`); **create the Progress table if none exists**. Do not commit without this.
+5. **README Progress** — flip shipped cells (`pending` → `[<module>.py](<path>)`); **create the Progress table if none exists**. Do not commit without this.
 6. **Review** — `.cursor/skills/openspec-verify-change/SKILL.md` (CRITICAL → fix once and re-verify; still CRITICAL → pause). Stale Progress cells are CRITICAL.
 7. **Commit** — implementation + OpenSpec artifacts + README progress; never push unless asked
 8. Re-read README and start the next cycle, or stop if complete
