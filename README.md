@@ -61,7 +61,7 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 
 ## Special labs
 
-Same fake support inbox as the 21-pattern loop; different action model. Not a fourth/fifth column on the table above. Loop-engineering skips this table unless **Next** names a special-lab module.
+Same fake support inbox as the 21-pattern loop; different action model. Not a fourth/fifth column on the table above. Loop-engineering skips this table unless the user (or the main **Next** line) names a special-lab module.
 
 | Lab | Package | demo | agent loop | extra | Notes |
 |---|---|---|---|---|---|

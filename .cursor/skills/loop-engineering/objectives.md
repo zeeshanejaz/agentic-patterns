@@ -2,7 +2,7 @@
 
 Source of truth: the **Progress** table, **Next** line, and **Learning order** in `README.md`. Re-read them at the start of every cycle. Do not trust memory of earlier cycles.
 
-The **Special labs** table (MCP, OO-Agents) is not part of pick-next or loop completion. Skip it unless the user or **Next** names a special-lab module.
+The **Special labs** table (MCP, OO-Agents) is not part of pick-next or loop completion. Skip it unless the user or the main **Next** line names a special-lab module. **Special labs next** is documentation, not a pick.
 
 ## What "done" means
 
@@ -28,7 +28,7 @@ Apply the first matching rule:
 2. **Else implement the next scratch pattern.** Lowest number with scratch `pending` (skip #10).
 3. **Quality/safety wrap.** For #12 exception handling, #13 HITL, #18 guardrails, #19 evaluation: prefer wrapping an existing flow over a standalone clone of every backend. Still land scratch first, then ports, unless the README Next line says otherwise.
 4. **Honor an explicit Next line** if it names a single action (e.g. "Planning (#6) from scratch") **and** rule 1 has nothing to port. If Next says "either A or B", use rules 1–2 (ports before new scratch).
-5. **Never pick MCP or OO-Agents** as a pattern port (`port-*-mcp`, `port-*-nooa`). Special labs are opt-in (`impl-nooa-lab`, extra MCP modules) when the user or **Special labs next** is the assigned work.
+5. **Never pick MCP or OO-Agents** as a pattern port (`port-*-mcp`, `port-*-nooa`). **Special labs next** is not a pick-next signal. Only work a special lab when the user asks, or when the main **Next** line names `impl-nooa-lab` / an MCP module.
 
 Examples with the current table shape:
 
@@ -78,6 +78,7 @@ Source of truth for pick-next **and** a required edit every cycle. Do this after
    - MAF `done` iff the matching module exists under `packages/maf-lab`
    - otherwise `pending`
    - pattern `#10` is always `—` (not a 3-way port)
+   - Special labs: MCP `done` iff `packages/mcp-lab` has `demo` / `tool_use` / `server`; OO-Agents `done` iff `packages/nooa-lab` has `demo` / `support`; otherwise `pending`. Do not add MCP or OO-Agents columns to the 21-pattern table.
 3. Add **Done:** and **Next:** lines under the table.
 4. Then continue the cycle (pick / implement / flip what this cycle ships).
 
@@ -114,6 +115,15 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 
 **Done:** <one line of what exists>
 **Next:** <one line from pick-next>
+
+## Special labs
+
+| Lab | Package | demo | agent loop | extra | Notes |
+|---|---|---|---|---|---|
+| MCP | `packages/mcp-lab` | pending | pending (`tool_use`) | pending (`server`) | discover/authorize tools via FastMCP |
+| OO-Agents | `packages/nooa-lab` | pending | pending (`support`) | — | Python object + CodeAct |
+
+**Special labs next:** <documentation only; not a pick-next signal>
 ```
 
 ### After each cycle (table already exists)
