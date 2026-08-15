@@ -29,23 +29,23 @@ MCP is the integration layer under tool use (discover/authorize tools). OO-Agent
 
 ## Progress
 
-Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
+Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special labs (not 3-way ports)
 
 | # | Pattern | scratch | LangChain | MAF | Notes |
 |---|---|---|---|---|---|
-| 1 | Prompt chaining | done | done | done | summarize → draft → policy check |
-| 2 | Routing | done | done | done | classify billing / shipping / cancel / other |
-| 3 | Parallelization | done | done | done | sectioning (split) and voting (N drafts) |
-| 4 | Reflection | done | done | done | draft → critic → revise until PASS |
-| 5 | Tool use | done | done | done | function-calling loop; MCP variant done; OO-Agents pending |
-| 6 | Planning | done | done | done | plan DAG → execute → replan once if blocked |
-| 7 | Multi-agent collaboration | done | done | done | coordinator → specialists → shared notes → writer |
-| 8 | Memory management | done | done | done | short-term / episodic / long-term across turns |
-| 9 | Learning and adaptation | done | done | done | collect feedback → distill lessons → A/B |
-| 10 | Model Context Protocol | — | — | — | FastMCP lab done — see Special labs |
-| 11 | Goal setting and monitoring | done | done | done | set KPIs → score → adjust within budget |
-| 12 | Exception handling and recovery | done | done | done | wrap tool use: retry / fallback / stop |
-| 13 | Human-in-the-loop | done | pending | pending | gate refund-over-$50 → pause → resume |
+| 1 | Prompt chaining | [prompt_chaining.py](packages/patterns/src/sd_agentic_patterns/prompt_chaining.py) | [prompt_chaining.py](packages/langchain-lab/src/sd_agentic_langchain/prompt_chaining.py) | [prompt_chaining.py](packages/maf-lab/src/sd_agentic_maf/prompt_chaining.py) | summarize → draft → policy check |
+| 2 | Routing | [routing.py](packages/patterns/src/sd_agentic_patterns/routing.py) | [routing.py](packages/langchain-lab/src/sd_agentic_langchain/routing.py) | [routing.py](packages/maf-lab/src/sd_agentic_maf/routing.py) | classify billing / shipping / cancel / other |
+| 3 | Parallelization | [parallelization.py](packages/patterns/src/sd_agentic_patterns/parallelization.py) | [parallelization.py](packages/langchain-lab/src/sd_agentic_langchain/parallelization.py) | [parallelization.py](packages/maf-lab/src/sd_agentic_maf/parallelization.py) | sectioning (split) and voting (N drafts) |
+| 4 | Reflection | [reflection.py](packages/patterns/src/sd_agentic_patterns/reflection.py) | [reflection.py](packages/langchain-lab/src/sd_agentic_langchain/reflection.py) | [reflection.py](packages/maf-lab/src/sd_agentic_maf/reflection.py) | draft → critic → revise until PASS |
+| 5 | Tool use | [tool_use.py](packages/patterns/src/sd_agentic_patterns/tool_use.py) | [tool_use.py](packages/langchain-lab/src/sd_agentic_langchain/tool_use.py) | [tool_use.py](packages/maf-lab/src/sd_agentic_maf/tool_use.py) | function-calling loop; [MCP variant](packages/mcp-lab/src/sd_agentic_mcp/tool_use.py); OO-Agents pending |
+| 6 | Planning | [planning.py](packages/patterns/src/sd_agentic_patterns/planning.py) | [planning.py](packages/langchain-lab/src/sd_agentic_langchain/planning.py) | [planning.py](packages/maf-lab/src/sd_agentic_maf/planning.py) | plan DAG → execute → replan once if blocked |
+| 7 | Multi-agent collaboration | [multi_agent.py](packages/patterns/src/sd_agentic_patterns/multi_agent.py) | [multi_agent.py](packages/langchain-lab/src/sd_agentic_langchain/multi_agent.py) | [multi_agent.py](packages/maf-lab/src/sd_agentic_maf/multi_agent.py) | coordinator → specialists → shared notes → writer |
+| 8 | Memory management | [memory_management.py](packages/patterns/src/sd_agentic_patterns/memory_management.py) | [memory_management.py](packages/langchain-lab/src/sd_agentic_langchain/memory_management.py) | [memory_management.py](packages/maf-lab/src/sd_agentic_maf/memory_management.py) | short-term / episodic / long-term across turns |
+| 9 | Learning and adaptation | [learning.py](packages/patterns/src/sd_agentic_patterns/learning.py) | [learning.py](packages/langchain-lab/src/sd_agentic_langchain/learning.py) | [learning.py](packages/maf-lab/src/sd_agentic_maf/learning.py) | collect feedback → distill lessons → A/B |
+| 10 | Model Context Protocol | — | — | — | FastMCP lab — see Special labs |
+| 11 | Goal setting and monitoring | [goal_setting.py](packages/patterns/src/sd_agentic_patterns/goal_setting.py) | [goal_setting.py](packages/langchain-lab/src/sd_agentic_langchain/goal_setting.py) | [goal_setting.py](packages/maf-lab/src/sd_agentic_maf/goal_setting.py) | set KPIs → score → adjust within budget |
+| 12 | Exception handling and recovery | [exception_handling.py](packages/patterns/src/sd_agentic_patterns/exception_handling.py) | [exception_handling.py](packages/langchain-lab/src/sd_agentic_langchain/exception_handling.py) | [exception_handling.py](packages/maf-lab/src/sd_agentic_maf/exception_handling.py) | wrap tool use: retry / fallback / stop |
+| 13 | Human-in-the-loop | [human_in_the_loop.py](packages/patterns/src/sd_agentic_patterns/human_in_the_loop.py) | pending | pending | gate refund-over-$50 → pause → resume |
 | 14 | Knowledge retrieval (RAG) | pending | pending | pending | docs only |
 | 15 | Inter-agent communication (A2A) | pending | pending | pending | docs only |
 | 16 | Resource-aware optimization | pending | pending | pending | docs only |
@@ -65,7 +65,7 @@ Same fake support inbox as the 21-pattern loop; different action model. Not a fo
 
 | Lab | Package | demo | agent loop | extra | Notes |
 |---|---|---|---|---|---|
-| MCP | `packages/mcp-lab` | done | done (`tool_use`) | done (`server`) | discover/authorize the shared tools via FastMCP |
+| MCP | `packages/mcp-lab` | [demo.py](packages/mcp-lab/src/sd_agentic_mcp/demo.py) | [tool_use.py](packages/mcp-lab/src/sd_agentic_mcp/tool_use.py) | [server.py](packages/mcp-lab/src/sd_agentic_mcp/server.py) | discover/authorize the shared tools via FastMCP |
 | OO-Agents | `packages/nooa-lab` | pending | pending (`support`) | — | Python object + CodeAct; tools are methods on `self` |
 
 **Special labs next:** scaffold `packages/nooa-lab` (`impl-nooa-lab`): `demo` (construct `SupportAgent`, call `lookup_order` with no LLM) then `support` (CodeAct on `SUPPORT_EMAIL`, tags `pattern:tool_use` / `backend:nooa`).
