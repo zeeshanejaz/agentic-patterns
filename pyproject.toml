@@ -22,6 +22,7 @@ src = [
     "packages/langchain-lab/src",
     "packages/maf-lab/src",
     "packages/mcp-lab/src",
+    "packages/nooa-lab/src",
 ]
 
 [tool.ruff.lint]
@@ -34,4 +35,5 @@ known-first-party = [
     "sd_agentic_langchain",
     "sd_agentic_maf",
     "sd_agentic_mcp",
+    "sd_agentic_nooa",
 ]

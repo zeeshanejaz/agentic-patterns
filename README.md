@@ -37,7 +37,7 @@ Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special 
 | 2 | Routing | [routing.py](packages/patterns/src/sd_agentic_patterns/routing.py) | [routing.py](packages/langchain-lab/src/sd_agentic_langchain/routing.py) | [routing.py](packages/maf-lab/src/sd_agentic_maf/routing.py) | classify billing / shipping / cancel / other |
 | 3 | Parallelization | [parallelization.py](packages/patterns/src/sd_agentic_patterns/parallelization.py) | [parallelization.py](packages/langchain-lab/src/sd_agentic_langchain/parallelization.py) | [parallelization.py](packages/maf-lab/src/sd_agentic_maf/parallelization.py) | sectioning (split) and voting (N drafts) |
 | 4 | Reflection | [reflection.py](packages/patterns/src/sd_agentic_patterns/reflection.py) | [reflection.py](packages/langchain-lab/src/sd_agentic_langchain/reflection.py) | [reflection.py](packages/maf-lab/src/sd_agentic_maf/reflection.py) | draft → critic → revise until PASS |
-| 5 | Tool use | [tool_use.py](packages/patterns/src/sd_agentic_patterns/tool_use.py) | [tool_use.py](packages/langchain-lab/src/sd_agentic_langchain/tool_use.py) | [tool_use.py](packages/maf-lab/src/sd_agentic_maf/tool_use.py) | function-calling loop; [MCP variant](packages/mcp-lab/src/sd_agentic_mcp/tool_use.py); OO-Agents pending |
+| 5 | Tool use | [tool_use.py](packages/patterns/src/sd_agentic_patterns/tool_use.py) | [tool_use.py](packages/langchain-lab/src/sd_agentic_langchain/tool_use.py) | [tool_use.py](packages/maf-lab/src/sd_agentic_maf/tool_use.py) | function-calling loop; [MCP variant](packages/mcp-lab/src/sd_agentic_mcp/tool_use.py); [OO-Agents variant](packages/nooa-lab/src/sd_agentic_nooa/support.py) |
 | 6 | Planning | [planning.py](packages/patterns/src/sd_agentic_patterns/planning.py) | [planning.py](packages/langchain-lab/src/sd_agentic_langchain/planning.py) | [planning.py](packages/maf-lab/src/sd_agentic_maf/planning.py) | plan DAG → execute → replan once if blocked |
 | 7 | Multi-agent collaboration | [multi_agent.py](packages/patterns/src/sd_agentic_patterns/multi_agent.py) | [multi_agent.py](packages/langchain-lab/src/sd_agentic_langchain/multi_agent.py) | [multi_agent.py](packages/maf-lab/src/sd_agentic_maf/multi_agent.py) | coordinator → specialists → shared notes → writer |
 | 8 | Memory management | [memory_management.py](packages/patterns/src/sd_agentic_patterns/memory_management.py) | [memory_management.py](packages/langchain-lab/src/sd_agentic_langchain/memory_management.py) | [memory_management.py](packages/maf-lab/src/sd_agentic_maf/memory_management.py) | short-term / episodic / long-term across turns |
@@ -55,9 +55,9 @@ Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special 
 | 20 | Prioritization | [prioritization.py](packages/patterns/src/sd_agentic_patterns/prioritization.py) | [prioritization.py](packages/langchain-lab/src/sd_agentic_langchain/prioritization.py) | [prioritization.py](packages/maf-lab/src/sd_agentic_maf/prioritization.py) | score queue, execute top, re-score |
 | 21 | Exploration and discovery | [exploration.py](packages/patterns/src/sd_agentic_patterns/exploration.py) | [exploration.py](packages/langchain-lab/src/sd_agentic_langchain/exploration.py) | [exploration.py](packages/maf-lab/src/sd_agentic_maf/exploration.py) | branch, score, prune, pick |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–21) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–21) ported to LangChain and MAF, MCP server + tool-use client, OO-Agents SupportAgent demo + CodeAct support loop.
 
-**Next:** 21-pattern Progress table is complete. Special labs OO-Agents scaffold remains documentation only (not a 3-way port).
+**Next:** 21-pattern Progress table is complete. Special labs MCP and OO-Agents are scaffolded.
 
 ## Special labs
 
@@ -66,9 +66,9 @@ Same fake support inbox as the 21-pattern loop; different action model. Not a fo
 | Lab | Package | demo | agent loop | extra | Notes |
 |---|---|---|---|---|---|
 | MCP | `packages/mcp-lab` | [demo.py](packages/mcp-lab/src/sd_agentic_mcp/demo.py) | [tool_use.py](packages/mcp-lab/src/sd_agentic_mcp/tool_use.py) | [server.py](packages/mcp-lab/src/sd_agentic_mcp/server.py) | discover/authorize the shared tools via FastMCP |
-| OO-Agents | `packages/nooa-lab` | pending | pending (`support`) | — | Python object + CodeAct; tools are methods on `self` |
+| OO-Agents | `packages/nooa-lab` | [demo.py](packages/nooa-lab/src/sd_agentic_nooa/demo.py) | [support.py](packages/nooa-lab/src/sd_agentic_nooa/support.py) | — | Python object + CodeAct; tools are methods on `self` |
 
-**Special labs next:** scaffold `packages/nooa-lab` (`impl-nooa-lab`): `demo` (construct `SupportAgent`, call `lookup_order` with no LLM) then `support` (CodeAct on `SUPPORT_EMAIL`, tags `pattern:tool_use` / `backend:nooa`).
+**Special labs next:** MCP and OO-Agents scaffolds are shipped. Not a pick-next signal.
 
 Pattern discussions, mermaid diagrams, and ASCII art live under `docs/agentic-design-patterns-docs/`.
 
@@ -163,7 +163,7 @@ uv run --package sd-agentic-maf python -m sd_agentic_maf.prioritization
 uv run --package sd-agentic-maf python -m sd_agentic_maf.exploration
 ```
 
-Filter traces in Langfuse by `pattern:*` and `backend:scratch` / `langchain` / `maf`.
+Filter traces in Langfuse by `pattern:*` and `backend:scratch` / `langchain` / `maf` / `mcp` / `nooa`.
 
 ### MCP (pattern 10)
 
@@ -176,6 +176,17 @@ uv run --package sd-agentic-mcp python -m sd_agentic_mcp.server
 ```
 
 `demo` lists tools/resources/prompts and calls them in-process (no LLM). `tool_use` is the same agent loop as `sd_agentic_patterns.tool_use`, but the model only sees tools discovered from the MCP server. `server` speaks stdio so you can point Claude Desktop or Cursor at it.
+
+### OO-Agents (code as action)
+
+Same fake support inbox; tools are methods on `SupportAgent`. The model acts by writing Python (CodeAct) instead of emitting tool-call JSON.
+
+```powershell
+uv run --package sd-agentic-nooa python -m sd_agentic_nooa.demo
+uv run --package sd-agentic-nooa python -m sd_agentic_nooa.support
+```
+
+`demo` constructs `SupportAgent` and calls `lookup_order` with no generation. `support` runs CodeAct on `SUPPORT_EMAIL` (tags `pattern:tool_use` / `backend:nooa`).
 
 ## Learning order
 
