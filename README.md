@@ -52,12 +52,12 @@ Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special 
 | 17 | Reasoning techniques | [reasoning.py](packages/patterns/src/sd_agentic_patterns/reasoning.py) | [reasoning.py](packages/langchain-lab/src/sd_agentic_langchain/reasoning.py) | [reasoning.py](packages/maf-lab/src/sd_agentic_maf/reasoning.py) | CoT samples + self-consistency pick |
 | 18 | Guardrails / safety | [guardrails.py](packages/patterns/src/sd_agentic_patterns/guardrails.py) | [guardrails.py](packages/langchain-lab/src/sd_agentic_langchain/guardrails.py) | [guardrails.py](packages/maf-lab/src/sd_agentic_maf/guardrails.py) | input + output checks, rewrite on fail |
 | 19 | Evaluation and monitoring | [evaluation.py](packages/patterns/src/sd_agentic_patterns/evaluation.py) | [evaluation.py](packages/langchain-lab/src/sd_agentic_langchain/evaluation.py) | [evaluation.py](packages/maf-lab/src/sd_agentic_maf/evaluation.py) | golden + heuristics + LLM judge |
-| 20 | Prioritization | pending | pending | pending | docs only |
+| 20 | Prioritization | [prioritization.py](packages/patterns/src/sd_agentic_patterns/prioritization.py) | pending | pending | score queue, execute top, re-score |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–19) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–20) ported to LangChain and MAF through #19, prioritization scratch, MCP server + tool-use client.
 
-**Next:** Prioritization (#20) from scratch.
+**Next:** Prioritization (#20) LangChain and MAF ports.
 
 ## Special labs
 
@@ -91,7 +91,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch patterns (1–9, 11–19)
+### From-scratch patterns (1–9, 11–20)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -112,6 +112,7 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.resource_awar
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.reasoning
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.guardrails
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.evaluation
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prioritization
 ```
 
 ### Ports in the other labs

@@ -327,3 +327,17 @@ Output JSON only (no markdown):
 score is an integer 1 to 5. pass MUST be false if the draft invents facts, promises a refund over $50, or blames the customer.
 Judge only the draft against the email; do not rewrite it."""
 
+PRIORITY_SCORE_SYSTEM = f"""You score a customer support ticket for handling order.
+{POLICY}
+
+Output JSON only (no markdown):
+{{
+  "score": 7,
+  "reason": "short reason",
+  "sla_hours": 8
+}}
+
+score is an integer 1 to 10 (10 = handle first). sla_hours is 1, 4, 8, or 24.
+Raise score for chargebacks, refunds over $50, mixed billing+shipping, or "today"/"now" urgency.
+Lower score for a single calm ask with no money at risk."""
+
