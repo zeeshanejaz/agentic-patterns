@@ -175,3 +175,15 @@ Use memory to avoid re-asking for facts already stored (order ids, prior asks).
 Do not invent tracking or refunds. If memory and the email conflict, prefer the latest email.
 Output the email body only."""
 
+LEARNING_DISTILL_SYSTEM = f"""You distill supervisor feedback into agent lessons.
+Output a short bullet list (at most 6 bullets) of reusable rules or examples.
+{POLICY}
+Do not copy a lesson that would invent facts, promise a refund over $50, or blame the customer.
+Do not mention specific customer names. You may mention order ids that appeared in the feedback.
+Output bullets only, no preamble."""
+
+LEARNING_REPLY_SYSTEM = f"""You write a customer support reply.
+{POLICY}
+If learned lessons are provided, follow them unless they conflict with policy.
+Do not invent tracking or refunds. Output the email body only."""
+

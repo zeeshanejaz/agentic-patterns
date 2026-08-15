@@ -41,7 +41,7 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 6 | Planning | done | done | done | plan DAG → execute → replan once if blocked |
 | 7 | Multi-agent collaboration | done | done | done | coordinator → specialists → shared notes → writer |
 | 8 | Memory management | done | done | done | short-term / episodic / long-term across turns |
-| 9 | Learning and adaptation | pending | pending | pending | docs only |
+| 9 | Learning and adaptation | done | pending | pending | collect feedback → distill lessons → A/B |
 | 10 | Model Context Protocol | — | — | — | FastMCP lab done — see Special labs |
 | 11 | Goal setting and monitoring | pending | pending | pending | docs only |
 | 12 | Exception handling and recovery | pending | pending | pending | docs only |
@@ -55,9 +55,9 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–8) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–8) ported to LangChain and MAF, learning-and-adaptation scratch, MCP server + tool-use client.
 
-**Next:** Learning and adaptation (#9) from scratch.
+**Next:** Learning and adaptation (#9) LangChain and MAF ports.
 
 ## Special labs
 
@@ -91,7 +91,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch patterns (1–8)
+### From-scratch patterns (1–9)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -102,6 +102,7 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.tool_use
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.planning
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.multi_agent
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.memory_management
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.learning
 ```
 
 ### Ports in the other labs
