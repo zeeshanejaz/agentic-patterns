@@ -1,0 +1,152 @@
+"""A2A: specialists talk on a message bus with ids, TTL, and replies."""
+
+from __future__ import annotations
+
+from langfuse import get_client, observe, propagate_attributes
+from pydantic import BaseModel
+
+from sd_agentic_patterns.llm import complete
+from sd_agentic_shared.env import load_env
+from sd_agentic_shared.prompts import (
+    A2A_MESSAGE_SYSTEM,
+    BILLING_AGENT_SYSTEM,
+    SHIPPING_AGENT_SYSTEM,
+    WRITER_AGENT_SYSTEM,
+)
+from sd_agentic_shared.tasks.support_email import SUPPORT_EMAIL
+
+load_env()
+
+MAX_MESSAGES = 8
+
+
+class Envelope(BaseModel):
+    id: str
+    sender: str
+    recipient: str
+    body: str
+    ttl: int
+    in_reply_to: str | None = None
+
+
+class A2AResult(BaseModel):
+    envelopes: list[Envelope]
+    delivered: list[Envelope]
+    dropped: list[str]
+    reply: str
+
+
+class Bus:
+    def __init__(self) -> None:
+        self.posted: list[Envelope] = []
+        self.seq = 0
+
+    def post(
+        self,
+        sender: str,
+        recipient: str,
+        body: str,
+        ttl: int,
+        in_reply_to: str | None = None,
+    ) -> Envelope | None:
+        if len(self.posted) >= MAX_MESSAGES:
+            return None
+        self.seq += 1
+        env = Envelope(
+            id=f"m{self.seq}",
+            sender=sender,
+            recipient=recipient,
+            body=body.strip(),
+            ttl=ttl,
+            in_reply_to=in_reply_to,
+        )
+        self.posted.append(env)
+        return env
+
+    def deliver(self, recipient: str, turn: int) -> tuple[list[Envelope], list[str]]:
+        inbox: list[Envelope] = []
+        dropped: list[str] = []
+        for env in self.posted:
+            if env.recipient != recipient:
+                continue
+            if env.ttl < turn:
+                dropped.append(env.id)
+                continue
+            inbox.append(env)
+        return inbox, dropped
+
+
+def _blob(envelopes: list[Envelope]) -> str:
+    if not envelopes:
+        return "(empty inbox)"
+    lines = []
+    for env in envelopes:
+        reply = f" in_reply_to={env.in_reply_to}" if env.in_reply_to else ""
+        lines.append(
+            f"{env.id} {env.sender}->{env.recipient} ttl={env.ttl}{reply}: {env.body}"
+        )
+    return "\n".join(lines)
+
+
+@observe(name="pattern.a2a")
+def run(email: str | None = None) -> A2AResult:
+    ticket = email if email is not None else SUPPORT_EMAIL
+    with propagate_attributes(
+        tags=["backend:scratch", "pattern:a2a"],
+        metadata={"pattern": "a2a", "backend": "scratch"},
+    ):
+        bus = Bus()
+        dropped: list[str] = []
+        for recipient, instruction in (
+            ("billing", "Investigate charges, duplicate pending $89, and the refund ask."),
+            ("shipping", "Investigate tracking/status for the headphones order ids in the email."),
+        ):
+            bus.post(
+                "coordinator",
+                recipient,
+                f"Customer email:\n{ticket}\n\nInstruction: {instruction}",
+                ttl=2,
+            )
+        turn = 2
+        for agent, system in (
+            ("billing", BILLING_AGENT_SYSTEM),
+            ("shipping", SHIPPING_AGENT_SYSTEM),
+        ):
+            inbox, stale = bus.deliver(agent, turn)
+            dropped.extend(stale)
+            note = complete(
+                f"{system}\n{A2A_MESSAGE_SYSTEM}",
+                f"Inbox:\n{_blob(inbox)}\n\nWrite your bus note to coordinator.",
+            )
+            if inbox:
+                bus.post(agent, "coordinator", note, ttl=3, in_reply_to=inbox[0].id)
+        turn = 3
+        coord_inbox, stale = bus.deliver("coordinator", turn)
+        dropped.extend(stale)
+        bus.post(
+            "coordinator",
+            "writer",
+            f"Specialist mail:\n{_blob(coord_inbox)}\n\nWrite the customer reply.",
+            ttl=3,
+        )
+        writer_inbox, stale = bus.deliver("writer", turn)
+        dropped.extend(stale)
+        reply = complete(
+            WRITER_AGENT_SYSTEM,
+            f"Customer email:\n{ticket}\n\nBus mail:\n{_blob(writer_inbox)}",
+        )
+        return A2AResult(
+            envelopes=bus.posted,
+            delivered=writer_inbox,
+            dropped=sorted(set(dropped)),
+            reply=reply,
+        )
+
+
+def main() -> None:
+    print(run().model_dump_json(indent=2))
+    get_client().flush()
+
+
+if __name__ == "__main__":
+    main()

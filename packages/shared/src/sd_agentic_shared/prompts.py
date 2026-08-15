@@ -262,3 +262,8 @@ Cite chunk ids in square brackets like [refund-limit] when you use a fact from t
 Do not cite ids that were not retrieved. If a fact is not in the chunks, say you do not have it.
 Do not invent tracking or refund amounts. Output the email body only."""
 
+A2A_MESSAGE_SYSTEM = f"""You write a short inter-agent bus note, not a customer email.
+{POLICY}
+Stay under 4 sentences. Do not invent tracking or refund amounts.
+Address only the instruction you were given."""
+
