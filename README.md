@@ -49,15 +49,15 @@ Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special 
 | 14 | Knowledge retrieval (RAG) | [knowledge_retrieval.py](packages/patterns/src/sd_agentic_patterns/knowledge_retrieval.py) | [knowledge_retrieval.py](packages/langchain-lab/src/sd_agentic_langchain/knowledge_retrieval.py) | [knowledge_retrieval.py](packages/maf-lab/src/sd_agentic_maf/knowledge_retrieval.py) | chunk → top-k → cited reply |
 | 15 | Inter-agent communication (A2A) | [a2a.py](packages/patterns/src/sd_agentic_patterns/a2a.py) | [a2a.py](packages/langchain-lab/src/sd_agentic_langchain/a2a.py) | [a2a.py](packages/maf-lab/src/sd_agentic_maf/a2a.py) | envelopes on a bus (ids, TTL, replies) |
 | 16 | Resource-aware optimization | [resource_aware.py](packages/patterns/src/sd_agentic_patterns/resource_aware.py) | [resource_aware.py](packages/langchain-lab/src/sd_agentic_langchain/resource_aware.py) | [resource_aware.py](packages/maf-lab/src/sd_agentic_maf/resource_aware.py) | cheap vs expensive path by complexity |
-| 17 | Reasoning techniques | [reasoning.py](packages/patterns/src/sd_agentic_patterns/reasoning.py) | pending | pending | CoT samples + self-consistency pick |
+| 17 | Reasoning techniques | [reasoning.py](packages/patterns/src/sd_agentic_patterns/reasoning.py) | [reasoning.py](packages/langchain-lab/src/sd_agentic_langchain/reasoning.py) | [reasoning.py](packages/maf-lab/src/sd_agentic_maf/reasoning.py) | CoT samples + self-consistency pick |
 | 18 | Guardrails / safety | pending | pending | pending | docs only |
 | 19 | Evaluation and monitoring | pending | pending | pending | docs only |
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–16) ported to LangChain and MAF, reasoning scratch, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–17) ported to LangChain and MAF, MCP server + tool-use client.
 
-**Next:** Reasoning techniques (#17) LangChain and MAF ports.
+**Next:** Guardrails / safety (#18) from scratch.
 
 ## Special labs
 
@@ -132,6 +132,7 @@ uv run --package sd-agentic-langchain python -m sd_agentic_langchain.human_in_th
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.knowledge_retrieval
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.a2a
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.resource_aware
+uv run --package sd-agentic-langchain python -m sd_agentic_langchain.reasoning
 uv run --package sd-agentic-maf python -m sd_agentic_maf.prompt_chaining
 uv run --package sd-agentic-maf python -m sd_agentic_maf.routing
 uv run --package sd-agentic-maf python -m sd_agentic_maf.parallelization
@@ -147,6 +148,7 @@ uv run --package sd-agentic-maf python -m sd_agentic_maf.human_in_the_loop
 uv run --package sd-agentic-maf python -m sd_agentic_maf.knowledge_retrieval
 uv run --package sd-agentic-maf python -m sd_agentic_maf.a2a
 uv run --package sd-agentic-maf python -m sd_agentic_maf.resource_aware
+uv run --package sd-agentic-maf python -m sd_agentic_maf.reasoning
 ```
 
 Filter traces in Langfuse by `pattern:*` and `backend:scratch` / `langchain` / `maf`.
