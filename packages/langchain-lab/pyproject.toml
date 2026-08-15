@@ -1,0 +1,18 @@
+[project]
+name = "sd-agentic-langchain"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "sd-agentic-shared",
+    "langchain>=1",
+    "langgraph>=1",
+    "langchain-openai>=1",
+    "langfuse>=3",
+]
+
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.uv.sources]
+sd-agentic-shared = { workspace = true }

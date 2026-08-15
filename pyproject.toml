@@ -1,0 +1,37 @@
+[project]
+name = "sd-agentic"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = []
+
+[tool.uv]
+package = false
+
+[tool.uv.workspace]
+members = ["packages/*"]
+
+[dependency-groups]
+dev = ["ruff"]
+
+[tool.ruff]
+target-version = "py312"
+line-length = 100
+src = [
+    "packages/shared/src",
+    "packages/patterns/src",
+    "packages/langchain-lab/src",
+    "packages/maf-lab/src",
+    "packages/mcp-lab/src",
+]
+
+[tool.ruff.lint]
+select = ["E", "F", "I"]
+
+[tool.ruff.lint.isort]
+known-first-party = [
+    "sd_agentic_shared",
+    "sd_agentic_patterns",
+    "sd_agentic_langchain",
+    "sd_agentic_maf",
+    "sd_agentic_mcp",
+]

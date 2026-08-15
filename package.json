@@ -1,0 +1,6 @@
+{
+  "dependencies": {},
+  "devDependencies": {
+    "@fission-ai/openspec": "^1.9.0"
+  }
+}
