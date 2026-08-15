@@ -43,8 +43,8 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 8 | Memory management | done | done | done | short-term / episodic / long-term across turns |
 | 9 | Learning and adaptation | done | done | done | collect feedback → distill lessons → A/B |
 | 10 | Model Context Protocol | — | — | — | FastMCP lab done — see Special labs |
-| 11 | Goal setting and monitoring | done | pending | pending | set KPIs → score → adjust within budget |
-s| 12 | Exception handling and recovery | pending | pending | pending | docs only |
+| 11 | Goal setting and monitoring | done | done | done | set KPIs → score → adjust within budget |
+| 12 | Exception handling and recovery | pending | pending | pending | docs only |
 | 13 | Human-in-the-loop | pending | pending | pending | docs only |
 | 14 | Knowledge retrieval (RAG) | pending | pending | pending | docs only |
 | 15 | Inter-agent communication (A2A) | pending | pending | pending | docs only |
@@ -55,9 +55,9 @@ s| 12 | Exception handling and recovery | pending | pending | pending | docs onl
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9) ported to LangChain and MAF, goal-setting scratch, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11) ported to LangChain and MAF, MCP server + tool-use client.
 
-**Next:** Goal setting and monitoring (#11) LangChain and MAF ports.
+**Next:** Exception handling and recovery (#12) from scratch.
 
 ## Special labs
 
@@ -120,6 +120,7 @@ uv run --package sd-agentic-langchain python -m sd_agentic_langchain.planning
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.multi_agent
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.memory_management
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.learning
+uv run --package sd-agentic-langchain python -m sd_agentic_langchain.goal_setting
 uv run --package sd-agentic-maf python -m sd_agentic_maf.prompt_chaining
 uv run --package sd-agentic-maf python -m sd_agentic_maf.routing
 uv run --package sd-agentic-maf python -m sd_agentic_maf.parallelization
@@ -129,6 +130,7 @@ uv run --package sd-agentic-maf python -m sd_agentic_maf.planning
 uv run --package sd-agentic-maf python -m sd_agentic_maf.multi_agent
 uv run --package sd-agentic-maf python -m sd_agentic_maf.memory_management
 uv run --package sd-agentic-maf python -m sd_agentic_maf.learning
+uv run --package sd-agentic-maf python -m sd_agentic_maf.goal_setting
 ```
 
 Filter traces in Langfuse by `pattern:*` and `backend:scratch` / `langchain` / `maf`.
