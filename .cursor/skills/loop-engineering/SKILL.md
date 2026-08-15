@@ -13,7 +13,7 @@ description: >-
 
 Work README objectives one OpenSpec change at a time:
 
-**explore → propose → apply → review → commit → repeat**
+**explore → propose → apply → README Progress → review → commit → repeat**
 
 Stop only when the Progress table is complete, the user interrupts, or a blocker is hit.
 
@@ -24,6 +24,7 @@ This skill **orchestrates**. For each phase, **read and follow** that skill in f
 | Plan | `.cursor/skills/openspec-explore/SKILL.md` |
 | Spec | `.cursor/skills/openspec-propose/SKILL.md` |
 | Implement | `.cursor/skills/openspec-apply-change/SKILL.md` |
+| Progress | [objectives.md](objectives.md) § README Progress (create table if missing) |
 | Review | `.cursor/skills/openspec-verify-change/SKILL.md` |
 
 How to pick the next objective: [objectives.md](objectives.md).
@@ -35,6 +36,7 @@ How to pick the next objective: [objectives.md](objectives.md).
 - **Read-only explore.** Planning must not write application code. Exit explore before propose.
 - **Bounded explore.** Investigate the pattern docs and existing labs, decide an approach, then proceed. Do not wait for the user unless blocked.
 - **Review is a gate.** CRITICAL findings → fix via apply, re-verify. Do not commit with CRITICAL issues.
+- **README Progress is a cycle deliverable.** After apply, update the Progress table before review. If the table is missing, create it. Do not commit unless this cycle's cells flipped.
 - **Do not push** unless the user asked.
 
 If the user says "one", "next", or "one cycle", run a single cycle and stop. Otherwise keep looping.
@@ -51,7 +53,7 @@ Loop progress:
 - [ ] README Progress table complete
 ```
 
-1. Read `README.md` (Objective, Labs, Progress, Next, Learning order).
+1. Read `README.md` (Objective, Labs, Progress, Next, Learning order). If there is **no Progress table**, create one now using the template in [objectives.md](objectives.md) (infer `done` from modules that already exist). Then pick.
 2. Follow [objectives.md](objectives.md) to pick **exactly one** next unit of work.
 3. Announce:
 
@@ -59,7 +61,7 @@ Loop progress:
    ## Cycle N: <change-name>
    **Picked:** Pattern #<k> <name> → <scratch | port langchain | port maf | port langchain+maf>
    **Why:** <one sentence from the pick-next rules>
-   **Remaining after this:** <count of pending cells, excluding MCP "—">
+   **Remaining after this:** <count of pending cells in the 21-pattern table, excluding MCP "—" and Special labs>
    ```
 
 4. Run the **inner cycle** below.
@@ -104,19 +106,34 @@ Read and follow `openspec-apply-change` for this change. Implement until tasks a
 
 If apply pauses on a design issue, update artifacts, then continue. Do not start a different pattern in this cycle.
 
-### 4. Review
+### 4. Update README Progress (mandatory)
+
+Do this **after apply, before review**. Follow [objectives.md](objectives.md) § README Progress.
+
+- If `README.md` has no `## Progress` table, **create it**.
+- Flip every cell this cycle actually shipped from `pending` to `done`.
+- Refresh **Done:**, **Next:**, and **Run** for what landed.
+- Leave MCP `#10` as `—`. Do not add MCP or OO-Agents columns. Flip Special labs cells only if this cycle shipped that module.
+- Do not mark labs done that were not implemented.
+
+A cycle that ships code but leaves Progress unchanged is incomplete.
+
+### 5. Review
 
 Read and follow `openspec-verify-change` for this change (spec vs git diff).
 
 - **CRITICAL** → apply fixes (do not commit), then verify **once more**. If still CRITICAL, **pause the loop** and report. Do not start the next pattern.
+- Missing or stale Progress cells for this cycle are **CRITICAL**.
 - **WARNING / SUGGESTION** → fix only if cheap and still in scope; otherwise note them and continue.
 - Do not expand into unrelated refactors.
 
-### 5. Commit
+### 6. Commit
 
-Only after review has no CRITICAL issues.
+Only after review has no CRITICAL issues **and** `git diff README.md` shows the Progress update for this cycle.
 
 Include implementation, OpenSpec artifacts, and README progress updates. Exclude secrets (`.env`, credentials).
+
+If README is unchanged, stop: go back to step 4. Do not commit.
 
 Follow the git commit protocol:
 
@@ -130,7 +147,7 @@ Never update git config, never `--no-verify`, never force-push, never push unles
 
 If the hook fails, fix and make a **new** commit. Do not amend unless the hook only touched files from a commit you just created in this cycle and it was not pushed.
 
-### 6. Cycle report
+### 7. Cycle report
 
 ```
 ## Cycle N complete: <change-name>
@@ -154,7 +171,7 @@ Then either start cycle N+1 or stop.
 - Review still CRITICAL after the one fix+re-verify pass
 - Commit failed and cannot be repaired this cycle
 
-**Stop (success):** README Progress table has no `pending` cells (MCP `—` is complete).
+**Stop (success):** the 21-pattern Progress table has no `pending` cells (MCP `—` is complete). Special labs `pending` does not block this.
 
 On pause or completion, list: cycles finished, commits, remaining pending cells, and the blocker if any.
 
@@ -166,6 +183,7 @@ From `README.md`:
 - Shared task: do not invent order facts, do not promise refunds over $50, do not blame the customer
 - Tools (`lookup_order`, `create_refund`, `search_docs`) are in-memory fakes
 - MCP is the integration layer under tool use, not a fourth rewrite of every pattern
+- OO-Agents is the object-oriented harness (code as action), not a fifth rewrite of every pattern
 
 ## Invoking other skills
 

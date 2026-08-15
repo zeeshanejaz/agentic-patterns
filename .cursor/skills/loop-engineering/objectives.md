@@ -2,6 +2,8 @@
 
 Source of truth: the **Progress** table, **Next** line, and **Learning order** in `README.md`. Re-read them at the start of every cycle. Do not trust memory of earlier cycles.
 
+The **Special labs** table (MCP, OO-Agents) is not part of pick-next or loop completion. Skip it unless the user or **Next** names a special-lab module.
+
 ## What "done" means
 
 A pattern is complete when:
@@ -11,11 +13,12 @@ A pattern is complete when:
 | scratch | `packages/patterns` module exists and the cell is `done` |
 | LangChain | matching module in `packages/langchain-lab` and cell is `done` |
 | MAF | matching module in `packages/maf-lab` and cell is `done` |
-| MCP (#10) | cell is `—` and notes say the FastMCP lab is done — **skip** |
+| MCP (#10) | cell is `—` and Special labs MCP row is `done` — **skip** |
+| OO-Agents | Special labs row only; never a Progress column — **skip** |
 
 `pending` = work remaining. `docs only` in Notes means scratch does not exist yet.
 
-The loop is finished when no cell is `pending`.
+The loop is finished when no cell in the 21-pattern Progress table is `pending`. Special labs `pending` does not keep the loop running.
 
 ## Default pick-next (do not ask)
 
@@ -25,12 +28,14 @@ Apply the first matching rule:
 2. **Else implement the next scratch pattern.** Lowest number with scratch `pending` (skip #10).
 3. **Quality/safety wrap.** For #12 exception handling, #13 HITL, #18 guardrails, #19 evaluation: prefer wrapping an existing flow over a standalone clone of every backend. Still land scratch first, then ports, unless the README Next line says otherwise.
 4. **Honor an explicit Next line** if it names a single action (e.g. "Planning (#6) from scratch") **and** rule 1 has nothing to port. If Next says "either A or B", use rules 1–2 (ports before new scratch).
+5. **Never pick MCP or OO-Agents** as a pattern port (`port-*-mcp`, `port-*-nooa`). Special labs are opt-in (`impl-nooa-lab`, extra MCP modules) when the user or **Special labs next** is the assigned work.
 
 Examples with the current table shape:
 
 - Routing scratch done, LangChain pending → `port-routing-langchain` (or langchain+maf if both pending and small)
 - Patterns 2–5 scratch done and fully ported, #6 scratch pending → `impl-planning-scratch`
 - Never pick #10 for a 3-way port
+- Never pick OO-Agents as a fourth port column
 
 ## Cycle size
 
@@ -58,11 +63,68 @@ Use the README pattern slug (`routing`, `parallelization`, `planning`, `tool-use
 | Port example | `packages/langchain-lab/.../prompt_chaining.py`, `packages/maf-lab/.../prompt_chaining.py` |
 | Shared task | `packages/shared` (prompts, `support_email`, fake tools) |
 
-## README edits in the same change
+## README Progress
 
-After implementation, before commit:
+Source of truth for pick-next **and** a required edit every cycle. Do this after apply, before review. Do not commit if `git diff README.md` has no Progress change for the cells this cycle shipped.
 
-- Flip shipped cells from `pending` to `done`
+### Create the table if it is missing
+
+`README.md` must have a `## Progress` section with a markdown table. If that heading or table is absent (new repo, deleted section, or a README that only has prose):
+
+1. Insert the table **after Objective / Labs** (before Setup), using the template below.
+2. Fill cells from the **codebase**, not from memory:
+   - scratch `done` iff `packages/patterns/src/sd_agentic_patterns/<module>.py` exists
+   - LangChain `done` iff the matching module exists under `packages/langchain-lab`
+   - MAF `done` iff the matching module exists under `packages/maf-lab`
+   - otherwise `pending`
+   - pattern `#10` is always `—` (not a 3-way port)
+3. Add **Done:** and **Next:** lines under the table.
+4. Then continue the cycle (pick / implement / flip what this cycle ships).
+
+Template (21 rows; keep this shape and legend):
+
+```markdown
+## Progress
+
+Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
+
+| # | Pattern | scratch | LangChain | MAF | Notes |
+|---|---|---|---|---|---|
+| 1 | Prompt chaining | pending | pending | pending | |
+| 2 | Routing | pending | pending | pending | |
+| 3 | Parallelization | pending | pending | pending | |
+| 4 | Reflection | pending | pending | pending | |
+| 5 | Tool use | pending | pending | pending | |
+| 6 | Planning | pending | pending | pending | |
+| 7 | Multi-agent collaboration | pending | pending | pending | |
+| 8 | Memory management | pending | pending | pending | |
+| 9 | Learning and adaptation | pending | pending | pending | |
+| 10 | Model Context Protocol | — | — | — | FastMCP lab — see Special labs |
+| 11 | Goal setting and monitoring | pending | pending | pending | |
+| 12 | Exception handling and recovery | pending | pending | pending | |
+| 13 | Human-in-the-loop | pending | pending | pending | |
+| 14 | Knowledge retrieval (RAG) | pending | pending | pending | |
+| 15 | Inter-agent communication (A2A) | pending | pending | pending | |
+| 16 | Resource-aware optimization | pending | pending | pending | |
+| 17 | Reasoning techniques | pending | pending | pending | |
+| 18 | Guardrails / safety | pending | pending | pending | |
+| 19 | Evaluation and monitoring | pending | pending | pending | |
+| 20 | Prioritization | pending | pending | pending | |
+| 21 | Exploration and discovery | pending | pending | pending | |
+
+**Done:** <one line of what exists>
+**Next:** <one line from pick-next>
+```
+
+### After each cycle (table already exists)
+
+Before review / commit:
+
+- Flip **only** the cells this cycle shipped (`pending` → `done`)
 - Refresh **Done:** and **Next:**
 - Add a Run command if a new module should be invocable
 - Keep the legend and MCP `—` row intact
+- If this cycle shipped a special-lab module, flip the matching **Special labs** cell; do not add MCP/OO-Agents columns to the 21-pattern table
+- Do not mark a lab `done` unless its module exists
+
+Commit gate: if this cycle added or ported a module and the matching Progress cell is still `pending`, the cycle is not done — edit README first.
