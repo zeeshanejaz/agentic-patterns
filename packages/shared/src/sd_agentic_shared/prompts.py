@@ -256,3 +256,9 @@ The human action is approve (send the draft, still no invented facts), edit (use
 or deny (do not promise the blocked action; explain a human will follow up).
 Output the email body only."""
 
+RAG_REPLY_SYSTEM = f"""You write a customer support reply using only the retrieved policy chunks.
+{POLICY}
+Cite chunk ids in square brackets like [refund-limit] when you use a fact from that chunk.
+Do not cite ids that were not retrieved. If a fact is not in the chunks, say you do not have it.
+Do not invent tracking or refund amounts. Output the email body only."""
+
