@@ -80,6 +80,7 @@ Ground the pass in:
 - Existing scratch impl in `packages/patterns` (and a prior port, if this is a port)
 - `packages/shared` prompts, sample emails, fake tools
 - The sibling lab you are targeting (`langchain-lab` / `maf-lab`)
+- LangChain ports: `packages/langchain-lab/README.md` (LCEL vs LangGraph per pattern)
 
 Produce a short plan (intent, files to add/change, non-goals). Then **exit explore**.
 

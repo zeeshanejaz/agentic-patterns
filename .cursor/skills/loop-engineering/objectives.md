@@ -61,6 +61,7 @@ Use the README pattern slug (`routing`, `parallelization`, `planning`, `tool-use
 | Discussion | `docs/agentic-design-patterns-docs/pattern-discussion/<slug>.md` |
 | Scratch example | `packages/patterns/src/sd_agentic_patterns/` |
 | Port example | `packages/langchain-lab/.../prompt_chaining.py`, `packages/maf-lab/.../prompt_chaining.py` |
+| LangChain vs LangGraph | `packages/langchain-lab/README.md` (when LCEL is enough vs a `StateGraph`) |
 | Shared task | `packages/shared` (prompts, `support_email`, fake tools) |
 
 ## README Progress

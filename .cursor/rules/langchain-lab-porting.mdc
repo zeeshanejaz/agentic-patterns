@@ -1,0 +1,17 @@
+---
+description: When porting a pattern to langchain-lab, choose LCEL vs LangGraph from the lab README — do not wrap Python loops around chains for cyclic patterns.
+globs: packages/langchain-lab/**
+alwaysApply: false
+---
+
+# LangChain lab ports
+
+Before writing or changing a module here, read `packages/langchain-lab/README.md`.
+
+- **LCEL** (`prompt | llm | parser`, `RunnableParallel`, `RunnableBranch`) = static DAG known at write time.
+- **LangGraph** (`StateGraph`, checkpointers, `interrupt()`, `Send`) = unknown iteration, shared state, pause/resume, multi-agent.
+- Compose them: LCEL inside nodes, graph for which node runs next.
+- Do not re-invent a cycle with a Python `while` around LCEL. That hides nothing the framework owns.
+- `create_agent` is LangGraph under the hood.
+
+Classic RAG, linear chaining, and a guardrail wrapper may stay LCEL. Reflection, tool use, planning, HITL, multi-agent, and exploration should be graphs.
