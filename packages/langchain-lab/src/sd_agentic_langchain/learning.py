@@ -1,0 +1,134 @@
+"""Learning and adaptation: LCEL distill + reply after Python feedback cleaning."""
+
+from __future__ import annotations
+
+import re
+from typing import Any
+
+from langchain_core.output_parsers import StrOutputParser
+from langchain_core.prompts import ChatPromptTemplate
+from langchain_openai import ChatOpenAI
+from langfuse import get_client, observe, propagate_attributes
+from langfuse.langchain import CallbackHandler
+from pydantic import BaseModel
+
+from sd_agentic_shared.env import load_env, openai_model
+from sd_agentic_shared.prompts import LEARNING_DISTILL_SYSTEM, LEARNING_REPLY_SYSTEM
+from sd_agentic_shared.tasks.support_email import LEARNING_CASES, LEARNING_HELD_OUT, LearningCase
+
+load_env()
+
+MIN_RATING = 2
+POISON_MARKERS = (
+    "invent tracking",
+    "invent order",
+    "blame",
+    "their fault",
+    "your fault",
+    "stupid",
+)
+
+
+class LearningResult(BaseModel):
+    kept: list[dict[str, object]]
+    dropped: list[dict[str, object]]
+    lessons: str
+    held_out: str
+    baseline: str
+    adapted: str
+
+
+def _is_poison(correction: str) -> bool:
+    blob = correction.lower()
+    if any(marker in blob for marker in POISON_MARKERS):
+        return True
+    for match in re.findall(r"\$(\d+(?:\.\d+)?)", blob):
+        if float(match) > 50:
+            return True
+    return False
+
+
+def _case_blob(case: LearningCase) -> dict[str, object]:
+    return {"email": case.email, "rating": case.rating, "correction": case.correction}
+
+
+def _llm() -> ChatOpenAI:
+    return ChatOpenAI(model=openai_model())
+
+
+def _text_chain(system: str):
+    prompt = ChatPromptTemplate.from_messages(
+        [
+            ("system", system),
+            ("human", "{user}"),
+        ]
+    )
+    return prompt | _llm() | StrOutputParser()
+
+
+def clean_feedback(cases: list[LearningCase]) -> tuple[list[LearningCase], list[LearningCase]]:
+    kept: list[LearningCase] = []
+    dropped: list[LearningCase] = []
+    for case in cases:
+        if not case.correction.strip() or case.rating < MIN_RATING or _is_poison(case.correction):
+            dropped.append(case)
+        else:
+            kept.append(case)
+    return kept, dropped
+
+
+def distill(kept: list[LearningCase], config: dict[str, Any] | None = None) -> str:
+    if not kept:
+        return ""
+    parts = [
+        f"Rating {case.rating}/5\nEmail:\n{case.email}\nCorrection:\n{case.correction}"
+        for case in kept
+    ]
+    return _text_chain(LEARNING_DISTILL_SYSTEM).invoke(
+        {"user": "\n\n".join(parts)},
+        config=config,
+    ).strip()
+
+
+def write_reply(email: str, lessons: str = "", config: dict[str, Any] | None = None) -> str:
+    if lessons.strip():
+        user = f"Learned lessons:\n{lessons.strip()}\n\nEmail:\n{email}"
+    else:
+        user = f"Learned lessons: (none)\n\nEmail:\n{email}"
+    return _text_chain(LEARNING_REPLY_SYSTEM).invoke({"user": user}, config=config)
+
+
+@observe(name="pattern.learning")
+def run(
+    cases: list[LearningCase] | None = None,
+    held_out: str | None = None,
+) -> LearningResult:
+    batch = cases if cases is not None else LEARNING_CASES
+    probe = held_out if held_out is not None else LEARNING_HELD_OUT
+    with propagate_attributes(
+        tags=["backend:langchain", "pattern:learning"],
+        metadata={"pattern": "learning", "backend": "langchain"},
+    ):
+        handler = CallbackHandler()
+        config = {"callbacks": [handler]}
+        kept, dropped = clean_feedback(batch)
+        lessons = distill(kept, config=config)
+        baseline = write_reply(probe, lessons="", config=config)
+        adapted = write_reply(probe, lessons=lessons, config=config)
+        return LearningResult(
+            kept=[_case_blob(case) for case in kept],
+            dropped=[_case_blob(case) for case in dropped],
+            lessons=lessons,
+            held_out=probe,
+            baseline=baseline,
+            adapted=adapted,
+        )
+
+
+def main() -> None:
+    print(run().model_dump_json(indent=2))
+    get_client().flush()
+
+
+if __name__ == "__main__":
+    main()
