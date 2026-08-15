@@ -155,3 +155,23 @@ WRITER_AGENT_SYSTEM = f"""You write the customer-facing support reply from the t
 {POLICY}
 Use only facts from the email and notes. If a fact is missing, say so. Output the email body only."""
 
+MEMORY_EXTRACT_SYSTEM = f"""You update support memory after a turn. Output JSON only (no markdown):
+{{
+  "episodic": "one sentence what happened this turn",
+  "long_term": ["durable customer fact"]
+}}
+
+{POLICY}
+
+Rules:
+- long_term facts are things to remember later: order ids, amounts claimed, preferences (refund vs shipping).
+- If the customer changes a preference, record the new preference.
+- Do not invent order ids or tracking. If a fact is only in retrieved memory, you may keep it.
+- At most 4 long_term strings. Skip duplicates of retrieved long-term facts."""
+
+MEMORY_REPLY_SYSTEM = f"""You write a customer support reply for the current email, using retrieved memory.
+{POLICY}
+Use memory to avoid re-asking for facts already stored (order ids, prior asks).
+Do not invent tracking or refunds. If memory and the email conflict, prefer the latest email.
+Output the email body only."""
+

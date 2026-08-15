@@ -40,7 +40,7 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 5 | Tool use | done | done | done | function-calling loop; MCP variant done; OO-Agents pending |
 | 6 | Planning | done | done | done | plan DAG → execute → replan once if blocked |
 | 7 | Multi-agent collaboration | done | done | done | coordinator → specialists → shared notes → writer |
-| 8 | Memory management | pending | pending | pending | docs only |
+| 8 | Memory management | done | pending | pending | short-term / episodic / long-term across turns |
 | 9 | Learning and adaptation | pending | pending | pending | docs only |
 | 10 | Model Context Protocol | — | — | — | FastMCP lab done — see Special labs |
 | 11 | Goal setting and monitoring | pending | pending | pending | docs only |
@@ -55,9 +55,9 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–7) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–7) ported to LangChain and MAF, memory management from scratch, MCP server + tool-use client.
 
-**Next:** Memory management (#8) from scratch.
+**Next:** either Learning and adaptation (#9) from scratch, or port memory management so it can be diffed three ways.
 
 ## Special labs
 
@@ -91,7 +91,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch patterns (1–7)
+### From-scratch patterns (1–8)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -101,9 +101,12 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.reflection
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.tool_use
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.planning
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.multi_agent
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.memory_management
 ```
 
 ### Ports in the other labs
+
+LangChain ports: LCEL is the units of work (`prompt | llm | parser`); LangGraph is orchestration (cycles, state, HITL). Read [`packages/langchain-lab/README.md`](packages/langchain-lab/README.md) before implementing a port — it says when a chain is enough and when to use a `StateGraph`.
 
 ```powershell
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.prompt_chaining
@@ -138,4 +141,4 @@ uv run --package sd-agentic-mcp python -m sd_agentic_mcp.server
 
 ## Learning order
 
-Implement the next pattern in `packages/patterns` first. Port it to LangChain and MAF with the same module name. Quality/safety patterns (exception handling, HITL, guardrails, evaluation) can wrap existing flows instead of becoming standalone clones of every backend. MCP and OO-Agents stay special labs — do not port every pattern into them.
+Implement the next pattern in `packages/patterns` first. Port it to LangChain and MAF with the same module name. For LangChain, follow [`packages/langchain-lab/README.md`](packages/langchain-lab/README.md) (LCEL vs LangGraph per pattern). Quality/safety patterns (exception handling, HITL, guardrails, evaluation) can wrap existing flows instead of becoming standalone clones of every backend. MCP and OO-Agents stay special labs — do not port every pattern into them.

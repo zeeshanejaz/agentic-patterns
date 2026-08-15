@@ -37,3 +37,15 @@ SAMPLE_EMAILS: dict[str, str] = {
     "cancel": CANCEL_EMAIL,
     "billing": BILLING_EMAIL,
 }
+
+MEMORY_FOLLOWUP_1 = """
+its me again about the headphones. you should already have my order numbers.
+still no tracking. i told you i paid 89. what is the status??
+""".strip()
+
+MEMORY_FOLLOWUP_2 = """
+ok forget the refund. just tell me if A-18422 shipped. you already know this
+order from earlier.
+""".strip()
+
+MEMORY_THREAD: list[str] = [SUPPORT_EMAIL, MEMORY_FOLLOWUP_1, MEMORY_FOLLOWUP_2]
