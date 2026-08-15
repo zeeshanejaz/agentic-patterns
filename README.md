@@ -37,7 +37,7 @@ Legend: done · pending · MCP is a special case (not a 3-way port)
 | 3 | Parallelization | done | done | done | sectioning (split) and voting (N drafts) |
 | 4 | Reflection | done | done | done | draft → critic → revise until PASS |
 | 5 | Tool use | done | done | done | function-calling loop; MCP variant done |
-| 6 | Planning | pending | pending | pending | docs only |
+| 6 | Planning | done | pending | pending | plan DAG → execute → replan once if blocked |
 | 7 | Multi-agent collaboration | pending | pending | pending | docs only |
 | 8 | Memory management | pending | pending | pending | docs only |
 | 9 | Learning and adaptation | pending | pending | pending | docs only |
@@ -54,9 +54,9 @@ Legend: done · pending · MCP is a special case (not a 3-way port)
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–5) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–5) ported to LangChain and MAF, planning from scratch, MCP server + tool-use client.
 
-**Next:** Planning (#6) from scratch.
+**Next:** either Multi-agent collaboration (#7) from scratch, or port planning so it can be diffed three ways.
 
 Pattern discussions, mermaid diagrams, and ASCII art live under `docs/agentic-design-patterns-docs/`.
 
@@ -79,7 +79,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch core loop (patterns 1–5)
+### From-scratch patterns (1–6)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -87,6 +87,7 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.routing
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.parallelization
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.reflection
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.tool_use
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.planning
 ```
 
 ### Ports in the other labs

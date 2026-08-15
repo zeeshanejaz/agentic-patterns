@@ -72,3 +72,47 @@ Otherwise reply with FAIL, then numbered change requests. Do not rewrite the ema
 
 REVISE_SYSTEM = """Revise the support draft using the critic's change requests.
 Keep the same facts. Output only the new draft, no preamble."""
+
+PLAN_SYSTEM = f"""You are a support planner. Decompose the customer email into a JSON plan.
+{POLICY}
+
+Output JSON only (no markdown) with this shape:
+{{
+  "goal": "one sentence",
+  "steps": [
+    {{
+      "id": "s1",
+      "instruction": "what this step should accomplish",
+      "tool": "lookup_order",
+      "arguments": {{"order_id": "A-18422"}},
+      "depends_on": []
+    }}
+  ]
+}}
+
+Rules:
+- Use 3 to 6 steps.
+- tool must be lookup_order, create_refund, search_docs, or null.
+- lookup_order arguments: {{"order_id": "..."}} using an id from the email only. Never invent ids.
+- create_refund arguments: {{"order_id": "...", "amount": number}} only if the email asks for a refund of $50 or less.
+- search_docs arguments: {{"query": "refund"}} or similar policy keywords.
+- depends_on is a list of prior step ids.
+- Include a final step with tool null that writes the customer-facing reply from prior step outputs.
+- Do not put secrets or fake tracking numbers in the plan."""
+
+PLAN_REPAIR_SYSTEM = f"""Fix this into valid plan JSON only. Same schema as before.
+{POLICY}
+tool is lookup_order, create_refund, search_docs, or null. Do not invent order ids."""
+
+PLAN_STEP_SYSTEM = f"""You execute one planned support step. You do not call tools.
+{POLICY}
+Use only facts from the email and prior step outputs. If a fact is missing, say so.
+If this step is the customer reply, write the email body only."""
+
+PLAN_REPLAN_SYSTEM = f"""The current plan hit a blocked checkpoint. Output JSON for remaining steps only.
+Same step schema as the original planner (id, instruction, tool, arguments, depends_on).
+{POLICY}
+Do not repeat completed steps. You may depend_on completed step ids.
+Do not invent order ids. If a refund was refused, the remaining plan must not retry create_refund for that amount.
+End with a tool-null reply step."""
+
