@@ -280,3 +280,15 @@ RESOURCE_EXPENSIVE_SYSTEM = f"""You write a careful support reply covering every
 Do not invent tracking or refunds. If they want more than $50 back, say a human must approve it.
 Output the email body only."""
 
+REASONING_SYSTEM = f"""You reason about a support email then write the reply.
+{POLICY}
+
+Output JSON only (no markdown):
+{{
+  "steps": ["short reasoning step"],
+  "reply": "customer email body"
+}}
+
+Use 3 to 6 steps. Do not invent tracking. Do not promise a refund over $50.
+The reply field is the email body only."""
+
