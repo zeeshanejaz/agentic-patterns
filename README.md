@@ -34,7 +34,7 @@ Legend: done · pending · MCP is a special case (not a 3-way port)
 |---|---|---|---|---|---|
 | 1 | Prompt chaining | done | done | done | summarize → draft → policy check |
 | 2 | Routing | done | done | done | classify billing / shipping / cancel / other |
-| 3 | Parallelization | done | pending | pending | sectioning (split) and voting (N drafts) |
+| 3 | Parallelization | done | done | done | sectioning (split) and voting (N drafts) |
 | 4 | Reflection | done | pending | pending | draft → critic → revise until PASS |
 | 5 | Tool use | done | pending | pending | function-calling loop; MCP variant done |
 | 6 | Planning | pending | pending | pending | docs only |
@@ -54,9 +54,9 @@ Legend: done · pending · MCP is a special case (not a 3-way port)
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–5), prompt-chaining and routing ports to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–5), prompt-chaining, routing, and parallelization ports to LangChain and MAF, MCP server + tool-use client.
 
-**Next:** either Planning (#6) from scratch, or port parallelization / reflection / tool use so those patterns can be diffed three ways.
+**Next:** either Planning (#6) from scratch, or port reflection / tool use so those patterns can be diffed three ways.
 
 Pattern discussions, mermaid diagrams, and ASCII art live under `docs/agentic-design-patterns-docs/`.
 
@@ -94,8 +94,10 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.tool_use
 ```powershell
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.prompt_chaining
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.routing
+uv run --package sd-agentic-langchain python -m sd_agentic_langchain.parallelization
 uv run --package sd-agentic-maf python -m sd_agentic_maf.prompt_chaining
 uv run --package sd-agentic-maf python -m sd_agentic_maf.routing
+uv run --package sd-agentic-maf python -m sd_agentic_maf.parallelization
 ```
 
 Filter traces in Langfuse by `pattern:*` and `backend:scratch` / `langchain` / `maf`.
