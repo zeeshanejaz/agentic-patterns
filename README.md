@@ -53,11 +53,11 @@ Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special 
 | 18 | Guardrails / safety | [guardrails.py](packages/patterns/src/sd_agentic_patterns/guardrails.py) | [guardrails.py](packages/langchain-lab/src/sd_agentic_langchain/guardrails.py) | [guardrails.py](packages/maf-lab/src/sd_agentic_maf/guardrails.py) | input + output checks, rewrite on fail |
 | 19 | Evaluation and monitoring | [evaluation.py](packages/patterns/src/sd_agentic_patterns/evaluation.py) | [evaluation.py](packages/langchain-lab/src/sd_agentic_langchain/evaluation.py) | [evaluation.py](packages/maf-lab/src/sd_agentic_maf/evaluation.py) | golden + heuristics + LLM judge |
 | 20 | Prioritization | [prioritization.py](packages/patterns/src/sd_agentic_patterns/prioritization.py) | [prioritization.py](packages/langchain-lab/src/sd_agentic_langchain/prioritization.py) | [prioritization.py](packages/maf-lab/src/sd_agentic_maf/prioritization.py) | score queue, execute top, re-score |
-| 21 | Exploration and discovery | [exploration.py](packages/patterns/src/sd_agentic_patterns/exploration.py) | pending | pending | branch, score, prune, pick |
+| 21 | Exploration and discovery | [exploration.py](packages/patterns/src/sd_agentic_patterns/exploration.py) | [exploration.py](packages/langchain-lab/src/sd_agentic_langchain/exploration.py) | [exploration.py](packages/maf-lab/src/sd_agentic_maf/exploration.py) | branch, score, prune, pick |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–21) ported to LangChain and MAF through #20, exploration scratch, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–21) ported to LangChain and MAF, MCP server + tool-use client.
 
-**Next:** Exploration and discovery (#21) LangChain and MAF ports.
+**Next:** 21-pattern Progress table is complete. Special labs OO-Agents scaffold remains documentation only (not a 3-way port).
 
 ## Special labs
 
@@ -140,6 +140,7 @@ uv run --package sd-agentic-langchain python -m sd_agentic_langchain.reasoning
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.guardrails
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.evaluation
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.prioritization
+uv run --package sd-agentic-langchain python -m sd_agentic_langchain.exploration
 uv run --package sd-agentic-maf python -m sd_agentic_maf.prompt_chaining
 uv run --package sd-agentic-maf python -m sd_agentic_maf.routing
 uv run --package sd-agentic-maf python -m sd_agentic_maf.parallelization
@@ -159,6 +160,7 @@ uv run --package sd-agentic-maf python -m sd_agentic_maf.reasoning
 uv run --package sd-agentic-maf python -m sd_agentic_maf.guardrails
 uv run --package sd-agentic-maf python -m sd_agentic_maf.evaluation
 uv run --package sd-agentic-maf python -m sd_agentic_maf.prioritization
+uv run --package sd-agentic-maf python -m sd_agentic_maf.exploration
 ```
 
 Filter traces in Langfuse by `pattern:*` and `backend:scratch` / `langchain` / `maf`.
