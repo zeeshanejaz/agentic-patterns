@@ -48,16 +48,16 @@ Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special 
 | 13 | Human-in-the-loop | [human_in_the_loop.py](packages/patterns/src/sd_agentic_patterns/human_in_the_loop.py) | [human_in_the_loop.py](packages/langchain-lab/src/sd_agentic_langchain/human_in_the_loop.py) | [human_in_the_loop.py](packages/maf-lab/src/sd_agentic_maf/human_in_the_loop.py) | gate refund-over-$50 → pause → resume |
 | 14 | Knowledge retrieval (RAG) | [knowledge_retrieval.py](packages/patterns/src/sd_agentic_patterns/knowledge_retrieval.py) | [knowledge_retrieval.py](packages/langchain-lab/src/sd_agentic_langchain/knowledge_retrieval.py) | [knowledge_retrieval.py](packages/maf-lab/src/sd_agentic_maf/knowledge_retrieval.py) | chunk → top-k → cited reply |
 | 15 | Inter-agent communication (A2A) | [a2a.py](packages/patterns/src/sd_agentic_patterns/a2a.py) | [a2a.py](packages/langchain-lab/src/sd_agentic_langchain/a2a.py) | [a2a.py](packages/maf-lab/src/sd_agentic_maf/a2a.py) | envelopes on a bus (ids, TTL, replies) |
-| 16 | Resource-aware optimization | pending | pending | pending | docs only |
+| 16 | Resource-aware optimization | [resource_aware.py](packages/patterns/src/sd_agentic_patterns/resource_aware.py) | pending | pending | cheap vs expensive path by complexity |
 | 17 | Reasoning techniques | pending | pending | pending | docs only |
 | 18 | Guardrails / safety | pending | pending | pending | docs only |
 | 19 | Evaluation and monitoring | pending | pending | pending | docs only |
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–15) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–15) ported to LangChain and MAF, resource-aware scratch, MCP server + tool-use client.
 
-**Next:** Resource-aware optimization (#16) from scratch.
+**Next:** Resource-aware optimization (#16) LangChain and MAF ports.
 
 ## Special labs
 
@@ -91,7 +91,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch patterns (1–9, 11–15)
+### From-scratch patterns (1–9, 11–16)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -108,6 +108,7 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.exception_han
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.human_in_the_loop
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.knowledge_retrieval
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.a2a
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.resource_aware
 ```
 
 ### Ports in the other labs

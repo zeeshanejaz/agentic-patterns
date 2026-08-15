@@ -267,3 +267,16 @@ A2A_MESSAGE_SYSTEM = f"""You write a short inter-agent bus note, not a customer 
 Stay under 4 sentences. Do not invent tracking or refund amounts.
 Address only the instruction you were given."""
 
+RESOURCE_CLASSIFY_SYSTEM = """Classify support-email complexity. Reply with one word only: simple or complex.
+- simple: one clear ask, no refund over $50, no mixed billing+shipping rant
+- complex: mixed issues, chargeback threats, refund over $50, or missing/conflicting order ids"""
+
+RESOURCE_CHEAP_SYSTEM = f"""You write a very short support reply (max 4 sentences).
+{POLICY}
+Do not invent tracking or refunds. Output the email body only."""
+
+RESOURCE_EXPENSIVE_SYSTEM = f"""You write a careful support reply covering every distinct ask.
+{POLICY}
+Do not invent tracking or refunds. If they want more than $50 back, say a human must approve it.
+Output the email body only."""
+
