@@ -39,7 +39,7 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 4 | Reflection | done | done | done | draft → critic → revise until PASS |
 | 5 | Tool use | done | done | done | function-calling loop; MCP variant done; OO-Agents pending |
 | 6 | Planning | done | done | done | plan DAG → execute → replan once if blocked |
-| 7 | Multi-agent collaboration | done | pending | pending | coordinator → specialists → shared notes → writer |
+| 7 | Multi-agent collaboration | done | done | done | coordinator → specialists → shared notes → writer |
 | 8 | Memory management | pending | pending | pending | docs only |
 | 9 | Learning and adaptation | pending | pending | pending | docs only |
 | 10 | Model Context Protocol | — | — | — | FastMCP lab done — see Special labs |
@@ -55,9 +55,9 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–6) ported to LangChain and MAF, multi-agent from scratch, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–7) ported to LangChain and MAF, MCP server + tool-use client.
 
-**Next:** either Memory management (#8) from scratch, or port multi-agent so it can be diffed three ways.
+**Next:** Memory management (#8) from scratch.
 
 ## Special labs
 
@@ -112,12 +112,14 @@ uv run --package sd-agentic-langchain python -m sd_agentic_langchain.paralleliza
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.reflection
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.tool_use
 uv run --package sd-agentic-langchain python -m sd_agentic_langchain.planning
+uv run --package sd-agentic-langchain python -m sd_agentic_langchain.multi_agent
 uv run --package sd-agentic-maf python -m sd_agentic_maf.prompt_chaining
 uv run --package sd-agentic-maf python -m sd_agentic_maf.routing
 uv run --package sd-agentic-maf python -m sd_agentic_maf.parallelization
 uv run --package sd-agentic-maf python -m sd_agentic_maf.reflection
 uv run --package sd-agentic-maf python -m sd_agentic_maf.tool_use
 uv run --package sd-agentic-maf python -m sd_agentic_maf.planning
+uv run --package sd-agentic-maf python -m sd_agentic_maf.multi_agent
 ```
 
 Filter traces in Langfuse by `pattern:*` and `backend:scratch` / `langchain` / `maf`.
