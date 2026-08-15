@@ -237,3 +237,22 @@ EXCEPTION_FALLBACK_SYSTEM = f"""You write a short support reply after a tool fai
 Do not invent order status, tracking, or refunds. Say you could not complete the lookup
 and what the customer should do next. Output the email body only."""
 
+HITL_GATE_SYSTEM = f"""You decide if a support draft needs a human before sending.
+{POLICY}
+
+Output JSON only (no markdown):
+{{
+  "risk": "high",
+  "reason": "short reason",
+  "needs_human": true
+}}
+
+needs_human MUST be true if the customer asks for a refund over $50 or the draft promises one.
+risk is high, medium, or low."""
+
+HITL_RESUME_SYSTEM = f"""You write the customer-facing reply after a human review.
+{POLICY}
+The human action is approve (send the draft, still no invented facts), edit (use their edited text),
+or deny (do not promise the blocked action; explain a human will follow up).
+Output the email body only."""
+

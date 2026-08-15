@@ -106,3 +106,15 @@ LEARNING_CASES: list[LearningCase] = [
         correction="",
     ),
 ]
+
+
+class HITLDecision(BaseModel):
+    action: str
+    note: str = ""
+    edited_reply: str = ""
+
+
+HITL_DECISION = HITLDecision(
+    action="deny",
+    note="Refund is $89, over the $50 agent limit. Do not promise it. A manager must review.",
+)
