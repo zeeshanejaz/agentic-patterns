@@ -1,4 +1,4 @@
-# sd-agentic
+# Agentic Patterns Labs
 
 A uv workspace for learning the [21 agentic design patterns](docs/agentic-design-patterns.md) by implementing each one several ways on the **same task**, then comparing traces in Langfuse.
 
@@ -43,8 +43,8 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 8 | Memory management | done | done | done | short-term / episodic / long-term across turns |
 | 9 | Learning and adaptation | done | done | done | collect feedback → distill lessons → A/B |
 | 10 | Model Context Protocol | — | — | — | FastMCP lab done — see Special labs |
-| 11 | Goal setting and monitoring | pending | pending | pending | docs only |
-| 12 | Exception handling and recovery | pending | pending | pending | docs only |
+| 11 | Goal setting and monitoring | done | pending | pending | set KPIs → score → adjust within budget |
+s| 12 | Exception handling and recovery | pending | pending | pending | docs only |
 | 13 | Human-in-the-loop | pending | pending | pending | docs only |
 | 14 | Knowledge retrieval (RAG) | pending | pending | pending | docs only |
 | 15 | Inter-agent communication (A2A) | pending | pending | pending | docs only |
@@ -55,9 +55,9 @@ Legend: done · pending · MCP and OO-Agents are special labs (not 3-way ports)
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9) ported to LangChain and MAF, goal-setting scratch, MCP server + tool-use client.
 
-**Next:** Goal setting and monitoring (#11) from scratch.
+**Next:** Goal setting and monitoring (#11) LangChain and MAF ports.
 
 ## Special labs
 
@@ -91,7 +91,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch patterns (1–9)
+### From-scratch patterns (1–9, 11)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -103,6 +103,7 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.planning
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.multi_agent
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.memory_management
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.learning
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.goal_setting
 ```
 
 ### Ports in the other labs

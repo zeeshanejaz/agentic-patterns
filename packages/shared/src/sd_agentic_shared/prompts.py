@@ -187,3 +187,48 @@ LEARNING_REPLY_SYSTEM = f"""You write a customer support reply.
 If learned lessons are provided, follow them unless they conflict with policy.
 Do not invent tracking or refunds. Output the email body only."""
 
+SUPPORT_SLA = f"""Standing support ticket goals:
+- Cover every distinct customer ask in the email (shipping, billing, refund, cancel).
+- Stay within policy.
+- Acknowledge order ids that appear in the email; do not invent ids or tracking.
+- Do not treat a refund ask over $50 as already approved.
+
+{POLICY}"""
+
+GOAL_SET_SYSTEM = f"""You set measurable goals for handling one support email.
+{SUPPORT_SLA}
+
+Output JSON only (no markdown) with this shape:
+{{
+  "goals": [
+    {{"id": "coverage", "target": "one measurable target"}}
+  ]
+}}
+
+Rules:
+- Emit 3 to 5 goals.
+- id is a short slug (coverage, policy, ids, tone).
+- target is specific to THIS email, not a restatement of the whole SLA.
+- Every goal must be checkable from the reply text."""
+
+GOAL_MONITOR_SYSTEM = f"""You score a support reply against named goals.
+{POLICY}
+
+Output JSON only (no markdown) with this shape:
+{{
+  "scores": [
+    {{"id": "coverage", "status": "PASS", "reason": "short reason"}}
+  ]
+}}
+
+Rules:
+- Include every goal id you were given.
+- status is PASS or FAIL only.
+- FAIL if the reply invents facts, promises a refund over $50, or ignores a listed target."""
+
+GOAL_ADJUST_SYSTEM = f"""You write or revise a customer support reply to meet named goals.
+{POLICY}
+If there is no prior draft, write the first reply.
+If there is a prior draft and failed goals, revise toward those failures only.
+Do not invent tracking or refunds. Output the email body only."""
+
