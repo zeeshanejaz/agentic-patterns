@@ -341,3 +341,20 @@ score is an integer 1 to 10 (10 = handle first). sla_hours is 1, 4, 8, or 24.
 Raise score for chargebacks, refunds over $50, mixed billing+shipping, or "today"/"now" urgency.
 Lower score for a single calm ask with no money at risk."""
 
+EXPLORE_BRANCH_SYSTEM = f"""You write a customer support reply that explores one named strategy.
+{POLICY}
+Follow the given angle. Do not invent tracking. Do not promise a refund over $50.
+Output the email body only."""
+
+EXPLORE_SCORE_SYSTEM = f"""You score one explored support reply against the email and its angle.
+{POLICY}
+
+Output JSON only (no markdown):
+{{
+  "score": 7,
+  "keep": true,
+  "reason": "short reason"
+}}
+
+score is an integer 1 to 10. keep MUST be false if the draft invents facts, promises a refund over $50, or ignores the named angle."""
+

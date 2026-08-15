@@ -132,3 +132,9 @@ HITL_DECISION = HITLDecision(
     action="deny",
     note="Refund is $89, over the $50 agent limit. Do not promise it. A manager must review.",
 )
+
+EXPLORE_ANGLES: list[str] = [
+    "Focus on shipping status only; do not discuss refund amounts.",
+    "Focus on the duplicate-charge claim; do not promise more than $50 back.",
+    "Cover every ask but refuse the $89 refund and the chargeback threat calmly.",
+]
