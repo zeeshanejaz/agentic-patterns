@@ -50,14 +50,14 @@ Legend: `[file.py](path)` = shipped · pending · MCP and OO-Agents are special 
 | 15 | Inter-agent communication (A2A) | [a2a.py](packages/patterns/src/sd_agentic_patterns/a2a.py) | [a2a.py](packages/langchain-lab/src/sd_agentic_langchain/a2a.py) | [a2a.py](packages/maf-lab/src/sd_agentic_maf/a2a.py) | envelopes on a bus (ids, TTL, replies) |
 | 16 | Resource-aware optimization | [resource_aware.py](packages/patterns/src/sd_agentic_patterns/resource_aware.py) | [resource_aware.py](packages/langchain-lab/src/sd_agentic_langchain/resource_aware.py) | [resource_aware.py](packages/maf-lab/src/sd_agentic_maf/resource_aware.py) | cheap vs expensive path by complexity |
 | 17 | Reasoning techniques | [reasoning.py](packages/patterns/src/sd_agentic_patterns/reasoning.py) | [reasoning.py](packages/langchain-lab/src/sd_agentic_langchain/reasoning.py) | [reasoning.py](packages/maf-lab/src/sd_agentic_maf/reasoning.py) | CoT samples + self-consistency pick |
-| 18 | Guardrails / safety | pending | pending | pending | docs only |
+| 18 | Guardrails / safety | [guardrails.py](packages/patterns/src/sd_agentic_patterns/guardrails.py) | pending | pending | input + output checks, rewrite on fail |
 | 19 | Evaluation and monitoring | pending | pending | pending | docs only |
 | 20 | Prioritization | pending | pending | pending | docs only |
 | 21 | Exploration and discovery | pending | pending | pending | docs only |
 
-**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–17) ported to LangChain and MAF, MCP server + tool-use client.
+**Done:** workspace scaffold, shared support-email task, Langfuse wiring, from-scratch core loop (1–9, 11–17) ported to LangChain and MAF, guardrails scratch, MCP server + tool-use client.
 
-**Next:** Guardrails / safety (#18) from scratch.
+**Next:** Guardrails / safety (#18) LangChain and MAF ports.
 
 ## Special labs
 
@@ -91,7 +91,7 @@ $b64 = [Convert]::ToBase64String([Text.Encoding]::UTF8.GetBytes($pair))
 
 ## Run
 
-### From-scratch patterns (1–9, 11–17)
+### From-scratch patterns (1–9, 11–18)
 
 ```powershell
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.prompt_chaining
@@ -110,6 +110,7 @@ uv run --package sd-agentic-patterns python -m sd_agentic_patterns.knowledge_ret
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.a2a
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.resource_aware
 uv run --package sd-agentic-patterns python -m sd_agentic_patterns.reasoning
+uv run --package sd-agentic-patterns python -m sd_agentic_patterns.guardrails
 ```
 
 ### Ports in the other labs
