@@ -2,11 +2,12 @@
 name: loop-engineering
 description: >-
   Runs an autonomous engineering loop against README objectives: pick the next
-  pending agentic pattern, plan with openspec-explore, spec with openspec-propose,
-  implement with openspec-apply, review with openspec-verify-change, then commit.
-  Repeats until the README Progress table is complete. Use when the user asks for
-  loop engineering, to work through the README, keep implementing patterns, or
-  run the OpenSpec explore-propose-apply-review-commit cycle.
+  pending item from README.md, plan with openspec-explore, spec with
+  openspec-propose, implement with openspec-apply, update README Progress,
+  review with openspec-verify-change, then commit. Repeats until README
+  Progress has no pending work. Use when the user asks for loop engineering,
+  to work through the README, or to run the OpenSpec explore-propose-apply-
+  review-commit cycle.
 ---
 
 # Loop engineering
@@ -15,7 +16,7 @@ Work README objectives one OpenSpec change at a time:
 
 **explore → propose → apply → README Progress → review → commit → repeat**
 
-Stop only when the Progress table is complete, the user interrupts, or a blocker is hit.
+Stop only when README Progress is complete, the user interrupts, or a blocker is hit.
 
 This skill **orchestrates**. For each phase, **read and follow** that skill in full (do not improvise a shorter version):
 
@@ -24,19 +25,18 @@ This skill **orchestrates**. For each phase, **read and follow** that skill in f
 | Plan | `.cursor/skills/openspec-explore/SKILL.md` |
 | Spec | `.cursor/skills/openspec-propose/SKILL.md` |
 | Implement | `.cursor/skills/openspec-apply-change/SKILL.md` |
-| Progress | [objectives.md](objectives.md) § README Progress (create table if missing) |
 | Review | `.cursor/skills/openspec-verify-change/SKILL.md` |
 
-How to pick the next objective: [objectives.md](objectives.md).
+Pick-next, grounding, and constraints come from **`README.md` only**. Do not use a sidecar objectives file.
 
 ## Stance
 
-- **Autonomous by default.** Do not ask which pattern to do next. Pick it from the README.
+- **Autonomous by default.** Do not ask which item to do next. Pick it from the README.
 - **One change per cycle.** One kebab-case OpenSpec change, one commit.
 - **Read-only explore.** Planning must not write application code. Exit explore before propose.
-- **Bounded explore.** Investigate the pattern docs and existing labs, decide an approach, then proceed. Do not wait for the user unless blocked.
+- **Bounded explore.** Investigate README-linked docs and existing code, decide an approach, then proceed. Do not wait for the user unless blocked.
 - **Review is a gate.** CRITICAL findings → fix via apply, re-verify. Do not commit with CRITICAL issues.
-- **README Progress is a cycle deliverable.** After apply, update the Progress table before review. If the table is missing, create it. Do not commit unless this cycle's cells flipped.
+- **README Progress is a cycle deliverable.** After apply, update Progress before review. Do not commit unless this cycle's shipped work is reflected there.
 - **Do not push** unless the user asked.
 
 If the user says "one", "next", or "one cycle", run a single cycle and stop. Otherwise keep looping.
@@ -50,23 +50,41 @@ Loop progress:
 - [ ] Read README + pick next objective
 - [ ] Cycle 1: <objective>
 - [ ] …
-- [ ] README Progress table complete
+- [ ] README Progress complete
 ```
 
-1. Read `README.md` (Objective, Labs, Progress, Next, Learning order). If there is **no Progress table**, create one now using the template in [objectives.md](objectives.md) (infer shipped cells as source links from modules that already exist). Then pick.
-2. Follow [objectives.md](objectives.md) to pick **exactly one** next unit of work.
+1. Read `README.md` (Objective, Progress, Next, Learning order / equivalent, and any constraints). If there is **no Progress table** but Objective lists discrete trackable items, create a table from those items (infer shipped vs pending from the codebase). Do not invent rows the README does not imply.
+2. Pick **exactly one** next unit of work using **Pick next** below.
 3. Announce:
 
    ```
    ## Cycle N: <change-name>
-   **Picked:** Pattern #<k> <name> → <scratch | port langchain | port maf | port langchain+maf>
-   **Why:** <one sentence from the pick-next rules>
-   **Remaining after this:** <count of pending cells in the 21-pattern table, excluding MCP "—" and Special labs>
+   **Picked:** <objective>
+   **Why:** <one sentence from README Progress / Next / Learning order>
+   **Remaining after this:** <count of pending Progress cells, excluding skip markers>
    ```
 
 4. Run the **inner cycle** below.
 5. Re-read `README.md`. If pending work remains, start the next cycle immediately.
-6. When every Progress cell is a source link or `—`, stop with a completion summary. Do not invent extra work.
+6. When every Progress cell is shipped or an explicit skip (`—`, `n/a`, or README-documented skip), stop with a completion summary. Do not invent extra work.
+
+## Pick next
+
+Source of truth: **Progress**, **Next**, **Objective**, and **Learning order** (or similarly named sections) in `README.md`. Re-read them every cycle. Do not trust memory of earlier cycles.
+
+A cell is **pending** if it says `pending` (or equivalent). A cell is **shipped** if it is a markdown link to source, `done`, or another explicit shipped marker. Skip cells marked `—` / `n/a` unless the README says to work them.
+
+Apply the first matching rule:
+
+1. **Honor an unambiguous Next line** that names a single action.
+2. **Finish in-flight rows.** Lowest table row that already has some shipped cells and still has pending cells. Prefer one pending lab/column per cycle if the work is non-trivial; do both remaining columns only if they are straightforward mirrors of an existing port in that row.
+3. **Else the next fully pending row** in table order, following Learning order / Objective (e.g. implement the primary path first, then ports).
+4. **If Next says "either A or B"**, use rules 2–3. Do not pick at random.
+5. **Skip what the README marks as skip** (special cases, not-a-port notes, `—` cells).
+
+Change name: kebab-case from the objective (`impl-<thing>`, `port-<thing>-<target>`, or whatever the README's vocabulary suggests).
+
+One OpenSpec change must be reviewable: one capability in one place, or a small set of mirror ports of that same capability. Do not implement two different Progress rows in one cycle.
 
 ## Inner cycle
 
@@ -74,13 +92,7 @@ Loop progress:
 
 Read and follow `openspec-explore`. Stay read-only.
 
-Ground the pass in:
-
-- `docs/agentic-design-patterns.md` and `docs/agentic-design-patterns-docs/pattern-discussion/` for this pattern
-- Existing scratch impl in `packages/patterns` (and a prior port, if this is a port)
-- `packages/shared` prompts, sample emails, fake tools
-- The sibling lab you are targeting (`langchain-lab` / `maf-lab`)
-- LangChain ports: `packages/langchain-lab/README.md` (LCEL vs LangGraph per pattern)
+Ground the pass in whatever `README.md` points at: pattern/docs links, existing implementations to mirror, shared fixtures, and the target package/lab for this pick.
 
 Produce a short plan (intent, files to add/change, non-goals). Then **exit explore**.
 
@@ -88,15 +100,9 @@ Produce a short plan (intent, files to add/change, non-goals). Then **exit explo
 
 Read and follow `openspec-propose`.
 
-Change name: kebab-case, e.g. `impl-planning-scratch`, `port-routing-langchain`.
-
 The proposal must include:
 
-- Same shared task (fake support inbox); same prompts/sample emails from `packages/shared`
-- `packages/patterns` must not import LangChain or Microsoft Agent Framework
-- Ports use the **same module name** as scratch
-- Langfuse tags `pattern:*` and `backend:scratch` / `langchain` / `maf` (or `mcp`)
-- Quality/safety patterns (exception handling, HITL, guardrails, evaluation) wrap existing flows when that fits
+- Constraints and shared fixtures the README states (do not invent a parallel task)
 - A task to update `README.md` Progress / Done / Next / Run when the work lands
 
 Do not skip specs. Apply needs them for review.
@@ -105,17 +111,17 @@ Do not skip specs. Apply needs them for review.
 
 Read and follow `openspec-apply-change` for this change. Implement until tasks are done or blocked.
 
-If apply pauses on a design issue, update artifacts, then continue. Do not start a different pattern in this cycle.
+If apply pauses on a design issue, update artifacts, then continue. Do not start a different objective in this cycle.
 
 ### 4. Update README Progress (mandatory)
 
-Do this **after apply, before review**. Follow [objectives.md](objectives.md) § README Progress.
+Do this **after apply, before review**.
 
-- If `README.md` has no `## Progress` table, **create it**.
-- Flip every cell this cycle actually shipped from `pending` to `[<module>.py](<path>)`.
-- Refresh **Done:**, **Next:**, and **Run** for what landed.
-- Leave MCP `#10` as `—`. Do not add MCP or OO-Agents columns. Flip Special labs cells only if this cycle shipped that module.
-- Do not link labs that were not implemented.
+- If `README.md` has no `## Progress` table but Objective lists trackable items, **create it** from the README (not from a hardcoded template).
+- Flip every cell this cycle actually shipped from `pending` to a markdown link to the main module (`[<file>](<path>)`). If the table already uses `done` as its shipped marker, keep that convention.
+- Refresh **Done:** and **Next:** if those lines exist.
+- Add a Run command if a new module should be invocable.
+- Do not mark work shipped that was not implemented.
 
 A cycle that ships code but leaves Progress unchanged is incomplete.
 
@@ -123,7 +129,7 @@ A cycle that ships code but leaves Progress unchanged is incomplete.
 
 Read and follow `openspec-verify-change` for this change (spec vs git diff).
 
-- **CRITICAL** → apply fixes (do not commit), then verify **once more**. If still CRITICAL, **pause the loop** and report. Do not start the next pattern.
+- **CRITICAL** → apply fixes (do not commit), then verify **once more**. If still CRITICAL, **pause the loop** and report. Do not start the next objective.
 - Missing or stale Progress cells for this cycle are **CRITICAL**.
 - **WARNING / SUGGESTION** → fix only if cheap and still in scope; otherwise note them and continue.
 - Do not expand into unrelated refactors.
@@ -153,10 +159,10 @@ If the hook fails, fix and make a **new** commit. Do not amend unless the hook o
 ```
 ## Cycle N complete: <change-name>
 
-**Objective:** <pattern / lab>
+**Objective:** <what shipped>
 **Commit:** <short hash> <subject>
 **Review:** no CRITICAL / N WARNING
-**README:** <what Progress cells flipped to source links>
+**README:** <what Progress cells flipped>
 **Next pick:** <following objective or "all objectives done">
 ```
 
@@ -164,7 +170,7 @@ Then either start cycle N+1 or stop.
 
 ## Pause / stop
 
-**Pause** (do not pick a new pattern):
+**Pause** (do not pick a new objective):
 
 - User interrupts or says stop
 - Explore cannot decide without a human (missing domain fact, not a code question)
@@ -172,19 +178,13 @@ Then either start cycle N+1 or stop.
 - Review still CRITICAL after the one fix+re-verify pass
 - Commit failed and cannot be repaired this cycle
 
-**Stop (success):** the 21-pattern Progress table has no `pending` cells (MCP `—` is complete). Special labs `pending` does not block this.
+**Stop (success):** README Progress has no `pending` cells (skip markers count as complete).
 
 On pause or completion, list: cycles finished, commits, remaining pending cells, and the blocker if any.
 
-## Constraints (do not violate)
+## Constraints
 
-From `README.md`:
-
-- Patterns are the unit of learning; scratch first, then port
-- Shared task: do not invent order facts, do not promise refunds over $50, do not blame the customer
-- Tools (`lookup_order`, `create_refund`, `search_docs`) are in-memory fakes
-- MCP is the integration layer under tool use, not a fourth rewrite of every pattern
-- OO-Agents is the object-oriented harness (code as action), not a fifth rewrite of every pattern
+Follow constraints stated in `README.md`. Do not add project-specific policy here.
 
 ## Invoking other skills
 
