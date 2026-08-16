@@ -74,7 +74,21 @@ Pattern discussions, mermaid diagrams, and ASCII art live under `docs/agentic-de
 
 ## Practice
 
-Drill *which pattern to pick* (not frameworks or lab APIs) in the static quiz: open [`docs/quiz/index.html`](docs/quiz/index.html) from disk (double-click; no server). Five banks follow the source groups — Core, Advanced, System, Optimization, Strategic.
+The labs teach patterns by implementing them. Drill *which pattern to pick* (not frameworks or lab APIs) in a static MCQ page. It is not a lab package and does not use `uv`, Langfuse, or a server.
+
+Open [`docs/quiz/index.html`](docs/quiz/index.html) from disk (double-click in Explorer / Finder). If the bank list is empty, the browser blocked local scripts — open the HTML file itself, not a parent folder preview.
+
+Pick a bank. Each question has four choices; after you pick one, the page locks the answer and shows why it is right (and why a sibling pattern is wrong). Question order is shuffled per session; choices stay in authored order. The summary shows score, per-pattern results, missed stems, and **Retry missed**.
+
+| Bank | Patterns |
+|---|---|
+| Core (1–5) | Prompt chaining, routing, parallelization, reflection, tool use |
+| Advanced (6–10) | Planning, multi-agent, memory, learning, MCP |
+| System (11–15) | Goal setting, exception handling, HITL, RAG, A2A |
+| Optimization (16–19) | Resource-aware, reasoning, guardrails, evaluation |
+| Strategic (20–21) | Prioritization, exploration |
+
+Items come from the committed `docs/quiz/bank-*.js` files (pattern discussions, ascii/mermaid, and the [video transcript](docs/transcripts/master-20-agentic-design-patterns.md)). The video omits MCP; Advanced still includes it from the written docs. To regenerate banks, see [`docs/quiz/GENERATION.md`](docs/quiz/GENERATION.md).
 
 ## Setup
 
@@ -195,3 +209,7 @@ uv run --package sd-agentic-nooa python -m sd_agentic_nooa.support
 ## Learning order
 
 Implement the next pattern in `packages/patterns` first. Port it to LangChain and MAF with the same module name. For LangChain, follow [`packages/langchain-lab/README.md`](packages/langchain-lab/README.md) (LCEL vs LangGraph per pattern). Quality/safety patterns (exception handling, HITL, guardrails, evaluation) can wrap existing flows instead of becoming standalone clones of every backend. MCP and OO-Agents stay special labs — do not port every pattern into them.
+
+## License
+
+MIT. See [LICENSE](LICENSE).
