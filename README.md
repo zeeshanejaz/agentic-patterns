@@ -72,6 +72,10 @@ Same fake support inbox as the 21-pattern loop; different action model. Not a fo
 
 Pattern discussions, mermaid diagrams, and ASCII art live under `docs/agentic-design-patterns-docs/`.
 
+## Practice
+
+Drill *which pattern to pick* (not frameworks or lab APIs) in the static quiz: open [`docs/quiz/index.html`](docs/quiz/index.html) from disk (double-click; no server). Five banks follow the source groups — Core, Advanced, System, Optimization, Strategic.
+
 ## Setup
 
 ```powershell

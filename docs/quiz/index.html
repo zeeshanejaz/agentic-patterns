@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Agentic pattern quiz</title>
+  <style>
+    :root {
+      --bg: #12141a;
+      --panel: #1b1f2a;
+      --ink: #e8e6e1;
+      --muted: #9aa3b2;
+      --line: #2c3344;
+      --accent: #7eb8da;
+      --ok: #7dcea0;
+      --bad: #e07a7a;
+      --ok-bg: #1a3328;
+      --bad-bg: #3a2224;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: "Segoe UI", system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.45;
+    }
+    main {
+      max-width: 44rem;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 3rem;
+    }
+    h1 { font-size: 1.4rem; font-weight: 650; margin: 0 0 0.35rem; }
+    .lede { color: var(--muted); margin: 0 0 1.5rem; }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 1.15rem 1.2rem;
+    }
+    .hidden { display: none !important; }
+    button {
+      font: inherit;
+      cursor: pointer;
+      border-radius: 8px;
+    }
+    .bank-list, .choices { display: grid; gap: 0.6rem; }
+    .bank-btn, .choice, .nav-btn {
+      background: #252a38;
+      color: var(--ink);
+      border: 1px solid var(--line);
+      text-align: left;
+      padding: 0.75rem 0.9rem;
+    }
+    .bank-btn:hover, .choice:hover:not(:disabled), .nav-btn:hover {
+      border-color: var(--accent);
+    }
+    .bank-btn small { display: block; color: var(--muted); font-size: 0.85rem; margin-top: 0.2rem; }
+    .meta { color: var(--muted); font-size: 0.9rem; margin: 0 0 0.75rem; }
+    .stem { font-size: 1.05rem; margin: 0 0 1rem; }
+    .choice:disabled { cursor: default; }
+    .choice.correct { background: var(--ok-bg); border-color: var(--ok); }
+    .choice.wrong { background: var(--bad-bg); border-color: var(--bad); }
+    .feedback { margin-top: 1rem; padding-top: 0.85rem; border-top: 1px solid var(--line); }
+    .verdict { font-weight: 650; margin: 0 0 0.4rem; }
+    .verdict.ok { color: var(--ok); }
+    .verdict.bad { color: var(--bad); }
+    .actions { display: flex; gap: 0.6rem; flex-wrap: wrap; margin-top: 1rem; }
+    .nav-btn.primary { background: #2a4a62; border-color: var(--accent); }
+    .score { font-size: 1.25rem; font-weight: 650; margin: 0 0 1rem; }
+    table { width: 100%; border-collapse: collapse; margin: 0.5rem 0 1rem; }
+    th, td { text-align: left; padding: 0.4rem 0.35rem; border-bottom: 1px solid var(--line); }
+    th { color: var(--muted); font-weight: 600; font-size: 0.85rem; }
+    .missed { margin: 0; padding-left: 1.1rem; }
+    .missed li { margin: 0.55rem 0; }
+    .missed .right { color: var(--ok); }
+  </style>
+</head>
+<body>
+  <main>
+    <h1>Agentic pattern quiz</h1>
+    <p class="lede">Practice choosing patterns. Open this file from disk. No server.</p>
+
+    <section id="picker" class="card"></section>
+    <section id="question" class="card hidden"></section>
+    <section id="summary" class="card hidden"></section>
+  </main>
+
+  <script src="bank-core.js"></script>
+  <script src="bank-advanced.js"></script>
+  <script src="bank-system.js"></script>
+  <script src="bank-optimization.js"></script>
+  <script src="bank-strategic.js"></script>
+  <script src="quiz.js"></script>
+</body>
+</html>
