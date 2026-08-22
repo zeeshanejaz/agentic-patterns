@@ -23,6 +23,9 @@ from sd_agentic_shared.tasks.support_email import SUPPORT_EMAIL
 load_env()
 
 MAX_MESSAGES = 8
+# ttl is the last turn an envelope may be delivered.
+DISPATCH_TTL = 2  # specialists read at turn 2
+REPLY_TTL = 3  # coordinator and writer read at turn 3
 
 
 class Envelope(BaseModel):
@@ -116,18 +119,16 @@ def _blob(envelopes: list[Envelope]) -> str:
 def build_graph(bus: Bus, dropped: list[str]):
     def dispatch_node(state: A2AState) -> dict[str, str]:
         ticket = state["email"]
-        bus.post(
-            "coordinator",
-            "billing",
-            f"Customer email:\n{ticket}\n\nInstruction: Investigate charges, duplicate pending $89, and the refund ask.",
-            ttl=2,
-        )
-        bus.post(
-            "coordinator",
-            "shipping",
-            f"Customer email:\n{ticket}\n\nInstruction: Investigate tracking/status for the headphones order ids in the email.",
-            ttl=2,
-        )
+        for recipient, instruction in (
+            ("billing", "Investigate charges, duplicate pending $89, and the refund ask."),
+            ("shipping", "Investigate tracking/status for the headphones order ids in the email."),
+        ):
+            bus.post(
+                "coordinator",
+                recipient,
+                f"Customer email:\n{ticket}\n\nInstruction: {instruction}",
+                ttl=DISPATCH_TTL,
+            )
         return {}
 
     def specialists_node(state: A2AState) -> dict[str, str]:
@@ -139,12 +140,13 @@ def build_graph(bus: Bus, dropped: list[str]):
         ):
             inbox, stale = bus.deliver(agent, turn)
             dropped.extend(stale)
+            if not inbox:
+                continue
             note = _complete(
                 f"{system}\n{A2A_MESSAGE_SYSTEM}",
                 f"Inbox:\n{_blob(inbox)}\n\nWrite your bus note to coordinator.",
             )
-            if inbox:
-                bus.post(agent, "coordinator", note, ttl=3, in_reply_to=inbox[0].id)
+            bus.post(agent, "coordinator", note, ttl=REPLY_TTL, in_reply_to=inbox[0].id)
         return {}
 
     def forward_node(state: A2AState) -> dict[str, Any]:
@@ -156,7 +158,7 @@ def build_graph(bus: Bus, dropped: list[str]):
             "coordinator",
             "writer",
             f"Specialist mail:\n{_blob(coord_inbox)}\n\nWrite the customer reply.",
-            ttl=3,
+            ttl=REPLY_TTL,
         )
         return {}
 

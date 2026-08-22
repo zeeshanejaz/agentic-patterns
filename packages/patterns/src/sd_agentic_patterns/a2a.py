@@ -18,6 +18,9 @@ from sd_agentic_shared.tasks.support_email import SUPPORT_EMAIL
 load_env()
 
 MAX_MESSAGES = 8
+# ttl is the last turn an envelope may be delivered.
+DISPATCH_TTL = 2  # specialists read at turn 2
+REPLY_TTL = 3  # coordinator and writer read at turn 3
 
 
 class Envelope(BaseModel):
@@ -105,7 +108,7 @@ def run(email: str | None = None) -> A2AResult:
                 "coordinator",
                 recipient,
                 f"Customer email:\n{ticket}\n\nInstruction: {instruction}",
-                ttl=2,
+                ttl=DISPATCH_TTL,
             )
         turn = 2
         for agent, system in (
@@ -114,12 +117,13 @@ def run(email: str | None = None) -> A2AResult:
         ):
             inbox, stale = bus.deliver(agent, turn)
             dropped.extend(stale)
+            if not inbox:
+                continue
             note = complete(
                 f"{system}\n{A2A_MESSAGE_SYSTEM}",
                 f"Inbox:\n{_blob(inbox)}\n\nWrite your bus note to coordinator.",
             )
-            if inbox:
-                bus.post(agent, "coordinator", note, ttl=3, in_reply_to=inbox[0].id)
+            bus.post(agent, "coordinator", note, ttl=REPLY_TTL, in_reply_to=inbox[0].id)
         turn = 3
         coord_inbox, stale = bus.deliver("coordinator", turn)
         dropped.extend(stale)
@@ -127,7 +131,7 @@ def run(email: str | None = None) -> A2AResult:
             "coordinator",
             "writer",
             f"Specialist mail:\n{_blob(coord_inbox)}\n\nWrite the customer reply.",
-            ttl=3,
+            ttl=REPLY_TTL,
         )
         writer_inbox, stale = bus.deliver("writer", turn)
         dropped.extend(stale)

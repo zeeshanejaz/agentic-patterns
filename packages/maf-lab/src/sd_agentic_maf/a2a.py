@@ -24,6 +24,9 @@ load_env()
 _OTEL_READY = False
 
 MAX_MESSAGES = 8
+# ttl is the last turn an envelope may be delivered.
+DISPATCH_TTL = 2  # specialists read at turn 2
+REPLY_TTL = 3  # coordinator and writer read at turn 3
 
 
 class Envelope(BaseModel):
@@ -130,29 +133,28 @@ async def run(email: str | None = None) -> A2AResult:
         span.set_attribute("backend", "maf")
         bus = Bus()
         dropped: list[str] = []
-        bus.post(
-            "coordinator",
-            "billing",
-            f"Customer email:\n{ticket}\n\nInstruction: Investigate charges, duplicate pending $89, and the refund ask.",
-            ttl=2,
-        )
-        bus.post(
-            "coordinator",
-            "shipping",
-            f"Customer email:\n{ticket}\n\nInstruction: Investigate tracking/status for the headphones order ids in the email.",
-            ttl=2,
-        )
+        for recipient, instruction in (
+            ("billing", "Investigate charges, duplicate pending $89, and the refund ask."),
+            ("shipping", "Investigate tracking/status for the headphones order ids in the email."),
+        ):
+            bus.post(
+                "coordinator",
+                recipient,
+                f"Customer email:\n{ticket}\n\nInstruction: {instruction}",
+                ttl=DISPATCH_TTL,
+            )
         turn = 2
         for name in ("billing", "shipping"):
             inbox, stale = bus.deliver(name, turn)
             dropped.extend(stale)
+            if not inbox:
+                continue
             note = (
                 await agents[name].run(
                     f"Inbox:\n{_blob(inbox)}\n\nWrite your bus note to coordinator."
                 )
             ).text or ""
-            if inbox:
-                bus.post(name, "coordinator", note, ttl=3, in_reply_to=inbox[0].id)
+            bus.post(name, "coordinator", note, ttl=REPLY_TTL, in_reply_to=inbox[0].id)
         turn = 3
         coord_inbox, stale = bus.deliver("coordinator", turn)
         dropped.extend(stale)
@@ -160,7 +162,7 @@ async def run(email: str | None = None) -> A2AResult:
             "coordinator",
             "writer",
             f"Specialist mail:\n{_blob(coord_inbox)}\n\nWrite the customer reply.",
-            ttl=3,
+            ttl=REPLY_TTL,
         )
         writer_inbox, stale = bus.deliver("writer", turn)
         dropped.extend(stale)
